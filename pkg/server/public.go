@@ -2,7 +2,6 @@ package server
 
 import (
 	"blazetunnel/common"
-	"crypto/tls"
 	"fmt"
 	"io"
 	"net"
@@ -35,26 +34,11 @@ func (s *Server) startPublic() {
 
 func (s *Server) handlePublic(conn net.Conn) {
 	defer conn.Close()
-	tlsconn, ok := conn.(*tls.Conn)
-	if !ok {
-		return
-	}
 
-	err := tlsconn.Handshake()
-	if err != nil {
-		fmt.Printf("[server:publicListener] unable to process handshake: %s\n", err)
-		return
-	}
+	ServerName := "quic.meddler.xyz"
 
-	connState := tlsconn.ConnectionState()
-
-	if connState.ServerName == "" {
-		fmt.Printf("[server:publicListener] unable to process handshake: No SNI found\n")
-		return
-	}
-
-	fmt.Println("Connecting to : ", connState.ServerName)
-	rwc, err := s.hostmap.NewStreamFor(connState.ServerName)
+	fmt.Println("Connecting to : ", ServerName)
+	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
 		return

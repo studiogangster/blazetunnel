@@ -19,7 +19,7 @@ services:
             - .env
         ports:
             - 3001:3001/tcp
-            - 2723:2723/udp
+            # - 2723:2723/udp
         depends_on:
             - mockserver
 
