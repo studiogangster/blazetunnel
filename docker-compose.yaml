@@ -5,8 +5,8 @@ services:
         entrypoint: /bin/blazetunnel
         command: server --domain meddler.xyz  -i 3600
         ports: 
-            -   443:443
-            -   2723:2723
+            -   443:443/tcp
+            -   2723:2723/udp
 
 
     client:
@@ -14,5 +14,7 @@ services:
         entrypoint: /bin/blazetunnel
         command: client --tunnel "quic.meddler.xyz:2723" --local "localhost:4200" -i 3600
         ports: 
-            -   4200:4200
+            -   4200:4200/tcp
+            -   2723:2723/udp
+
 
