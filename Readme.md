@@ -27,6 +27,35 @@ Elimiate / Reduce Round-trip delay time
  *TODO:* Add instructions to use blazetunnel with docker
 
 
+
+### docker & docker-compose are required
+
+
+##  Customize docker-compose.yamL
+## SERVICES: 
+### server (blazetunnel server): Needs to be run on exit node (internet)
+### client (blazetunnel client): Node may or may not be behind NAT
+### mockserver (A sample server that would be exposed to the internet)
+
+
+
+
+
+##  Start server
+```
+docker-compose up server
+```
+
+
+##  Start client
+
+```
+docker-compose up client
+```
+
+
+
+
 Go build first.
 
 *Server*
