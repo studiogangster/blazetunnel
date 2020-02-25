@@ -46,8 +46,8 @@ Run 'Client' on local machine
 Create A record for *.domainname & domainname pointing to 'Server' node.
 
 Modify .env file in the root directory as follows:
-    DOMAIN_NAME => Domain name of the internet facing server / exit node 
-    SERVICE_NAME => Service name is the subdomain, that would be used to access the local server 
+DOMAIN_NAME => Domain name of the internet facing server / exit node 
+SERVICE_NAME => Service name is the subdomain, that would be used to access the local server 
 
 ```
 
