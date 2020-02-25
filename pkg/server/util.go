@@ -5,11 +5,9 @@ import (
 	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/binary"
-	"encoding/hex"
 	"encoding/pem"
 	"math/big"
-	"time"
+	"os"
 )
 
 func generateTLSConfig() *tls.Config {
@@ -42,10 +40,9 @@ func generateTLSConfigFallback() *tls.Config {
 }
 
 func genRandomString() string {
-	return "quic"
-	x := make([]byte, 8)
-	binary.LittleEndian.PutUint64(x, uint64(time.Now().UnixNano()))
-	return hex.EncodeToString(XOR(x, []byte("SampleKey")))
+
+	return os.Getenv("SERVICE_NAME")
+
 }
 
 // XOR is used to get the XOR of 2 byte arrays

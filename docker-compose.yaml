@@ -1,33 +1,30 @@
-version: '3'
+version: "3"
+
 services:
     server:
         build: .
         entrypoint: /bin/blazetunnel
-        command: server --domain meddler.xyz  -i 3600
-        ports: 
-            -   443:443/tcp
-            -   2723:2723/udp
-
+        command: server --domain ${DOMAIN_NAME}  -i 3600
+        env_file:
+            - .env
+        ports:
+            - 443:443/tcp
+            - 2723:2723/udp
 
     client:
         build: .
-
         entrypoint: /bin/blazetunnel
-        
-        command: client --tunnel "quic.meddler.xyz:2723" --local "mockserver:3001" -i 3600
-        ports: 
-            -   3001:3001/tcp
-            -   2723:2723/udp
-        depends_on: 
-            -   mockserver
-
+        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}:2723" --local "mockserver:3001" -i 3600
+        env_file:
+            - .env
+        ports:
+            - 3001:3001/tcp
+            - 2723:2723/udp
+        depends_on:
+            - mockserver
 
     mockserver:
         image: php
         command: php -S 0.0.0.0:3001
         expose:
-            -  3001
-
-        
-
-
+            - 3001
