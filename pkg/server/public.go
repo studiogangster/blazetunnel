@@ -1,18 +1,18 @@
 package server
 
 import (
+	"blazetunnel/common"
 	"crypto/tls"
 	"fmt"
 	"io"
 	"net"
-	"blazetunnel/common"
 )
 
 func (s *Server) initPublic() error {
 	cfg := generateTLSConfig()
 	fmt.Println("Allowed protos: ", cfg.NextProtos)
 	cfg.NextProtos = []string{"http/1.1", "acme-tls/1", "quic-echo-example"}
-	ln, err := tls.Listen("tcp", ":443", cfg)
+	ln, err := net.Listen("tcp", ":443")
 	if err != nil {
 		return err
 	}
