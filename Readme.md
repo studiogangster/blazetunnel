@@ -24,7 +24,7 @@ Eliminate Head of line blocking in TCP
 Elimiate / Reduce Round-trip delay time
 
 ### Try it
-####### *TODO:* Add instructions to use docker
+ *TODO:* Add instructions to use docker
 
 
 Go build first.
