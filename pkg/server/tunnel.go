@@ -81,10 +81,34 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		session:   session,
 		ctlStream: ctlStream,
 	})
+
 	if !ok {
-		fmt.Printf("[server:tunnelListener] server host config already found\n")
+		fmt.Printf("[server:tunnelListener] server host config already found.\n")
+		fmt.Printf("[server:tunnelListener] trying to cose older and connect again.\n")
+
+		tunnelRef, ifExists := s.hostmap.Get(exposedDomain)
+		if ifExists {
+			tunnelRef.Close()
+			s.hostmap.Delete(exposedDomain)
+		}
+
+		fmt.Printf("[server:tunnelListener] Older connection closed & deleted\n")
+		// close()
+	}
+
+	fmt.Printf("[server:tunnelListener] Trying to update hostmap again\n")
+	// Try to put again.
+	ok = s.hostmap.Put(exposedDomain, &TunnelState{
+		session:   session,
+		ctlStream: ctlStream,
+	})
+
+	if !ok {
+		fmt.Printf("[server:tunnelListener] Failed again..Closing this connection\n")
 		close()
 	}
+
+	fmt.Printf("[server:tunnelListener] Older host disconnected & new one connected\n")
 
 	getOut := false
 
