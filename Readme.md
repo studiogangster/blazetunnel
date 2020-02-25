@@ -31,11 +31,11 @@ Elimiate / Reduce Round-trip delay time
 ### docker & docker-compose are required
 
 
-##  Customize docker-compose.yamL
-## SERVICES: 
-### server (blazetunnel server): Needs to be run on exit node (internet)
-### client (blazetunnel client): Node may or may not be behind NAT
-### mockserver (A sample server that would be exposed to the internet)
+###  Customize docker-compose.yamL
+#### Services: 
+##### server (blazetunnel server): Needs to be run on exit node (internet)
+##### client (blazetunnel client): Node may or may not be behind NAT
+##### mockserver (A sample server that would be exposed to the internet)
 
 
 
