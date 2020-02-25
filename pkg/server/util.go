@@ -10,22 +10,11 @@ import (
 	"encoding/pem"
 	"math/big"
 	"time"
-
-	"github.com/mholt/certmagic"
 )
 
 func generateTLSConfig() *tls.Config {
-	certmagic.Default.OnDemand = &certmagic.OnDemandConfig{
-		DecisionFunc: func(name string) error {
-			return nil
-		},
-	}
 
-	certmagic.Default.Agreed = true
-	certmagic.Default.Email = "akilan1997@gmail.com"
-	certmagic.Default.CA = certmagic.LetsEncryptProductionCA
-
-	return certmagic.NewDefault().TLSConfig()
+	return generateTLSConfigFallback()
 }
 
 func generateTLSConfigFallback() *tls.Config {
