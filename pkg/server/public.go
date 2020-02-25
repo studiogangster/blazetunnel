@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"qxpose/common"
+	"blazetunnel/common"
 )
 
 func (s *Server) initPublic() error {

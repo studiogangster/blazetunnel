@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	"os"
-	"qxpose/pkg/client"
-	"qxpose/pkg/server"
+	"blazetunnel/pkg/client"
+	"blazetunnel/pkg/server"
 
 	"github.com/urfave/cli"
 )
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "qxpose"
+	app.Name = "blazetunnel"
 	app.Version = "v0.0.1"
 	app.Usage = "Expose your local application ports to the internet"
 	app.Copyright = "Akilan Elango 2019"

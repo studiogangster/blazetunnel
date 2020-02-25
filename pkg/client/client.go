@@ -1,12 +1,12 @@
 package client
 
 import (
+	"blazetunnel/common"
 	"context"
 	"crypto/tls"
 	"fmt"
 	"io"
 	"net"
-	"qxpose/common"
 	"time"
 
 	"github.com/lucas-clemente/quic-go"

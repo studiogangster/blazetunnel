@@ -1,4 +1,4 @@
-module qxpose
+module blazetunnel
 
 go 1.13
 
