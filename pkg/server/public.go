@@ -33,11 +33,12 @@ func (s *Server) startPublic() {
 }
 
 func (s *Server) handlePublic(conn net.Conn) {
+
 	defer conn.Close()
 
 	ServerName := "quic.meddler.xyz"
 
-	fmt.Println("Connecting to : ", ServerName)
+	fmt.Println("Connecting to : ", ServerName, conn.RemoteAddr(), conn.LocalAddr())
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
