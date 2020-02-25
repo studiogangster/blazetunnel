@@ -23,13 +23,9 @@ Utilise single socket to serve parallel requests, using QUIC's multilexing.
 Eliminate Head of line blocking in TCP
 Elimiate / Reduce Round-trip delay time
 
-### Try it
- *TODO:* Add instructions to use blazetunnel with docker
+### Details
 
-
-
-### docker & docker-compose are required
-
+##### docker & docker-compose are required
 
 ###  Customize docker-compose.yamL
 #### Services: 
@@ -37,6 +33,7 @@ Elimiate / Reduce Round-trip delay time
 ##### client (blazetunnel client): Node may or may not be behind NAT
 ##### mockserver (A sample server that would be exposed to the internet)
 
+`*TODO:* Add instructions to use blazetunnel with docker`
 
 
 
