@@ -42,7 +42,7 @@ func generateTLSConfigFallback() *tls.Config {
 }
 
 func genRandomString() string {
-	// return "fb6b5b1749f59e70"
+	return "quic"
 	x := make([]byte, 8)
 	binary.LittleEndian.PutUint64(x, uint64(time.Now().UnixNano()))
 	return hex.EncodeToString(XOR(x, []byte("SampleKey")))

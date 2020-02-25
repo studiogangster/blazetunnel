@@ -12,9 +12,9 @@ services:
     client:
         build: .
         entrypoint: /bin/blazetunnel
-        command: client --tunnel "quic.meddler.xyz:2723" --local "localhost:4200" -i 3600
+        command: client --tunnel "quic.meddler.xyz:2723" --local "localhost:3001" -i 3600
         ports: 
-            -   4200:4200/tcp
+            -   3001:3001/tcp
             -   2723:2723/udp
 
 
