@@ -1,0 +1,12 @@
+version: '3'
+services:
+    server:
+        build: .
+        entrypoint: /bin/qxpose
+        command: server --domain meddler.xyz  -i 3600
+
+    client:
+        build: .
+        entrypoint: /bin/qxpose
+        command: client --tunnel "quic.meddler.xyz:2723" --local "localhost:4200" -i 3600
+
