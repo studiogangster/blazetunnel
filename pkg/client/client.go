@@ -36,8 +36,8 @@ var l = fmt.Println
 // Start starts the peer connection to the tunnel server
 func (c *Client) Start() error {
 	tlsConf := &tls.Config{
-		// InsecureSkipVerify: true,
-		NextProtos: []string{"quic-echo-example"},
+		InsecureSkipVerify: true,
+		NextProtos:         []string{"quic-echo-example"},
 	}
 	session, err := quic.DialAddr(c.tunnel, tlsConf, &quic.Config{
 		IdleTimeout: time.Second * time.Duration(c.idleTimeout),
