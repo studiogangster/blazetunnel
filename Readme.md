@@ -1,6 +1,10 @@
-# qxpose
+# blazetunnel
 
-WIP : Expose local tunnels to www
+Experimenting QUIC protocol to create P2P tunnel between private intranets and  all services within interconnected network to internet without Static IP.
+   
+######   Status
+Currently in experimental stage. 
+
 
 ### Architechture
 
@@ -15,11 +19,13 @@ Local <--- QUIC ---> |     Tunnel      | <--- TLS ---> Browser/cURL/openssl
 
 ### Why QUIC?
 
-Head of line blocking in TCP is a pain and ability to initiate streams from server
-without the need of any signalling or control streams is a nice to have to achieve low
-latency proxying.
+Utilise single socket to serve parallel requests, using QUIC's multilexing. 
+Eliminate Head of line blocking in TCP
+Elimiate / Reduce Round-trip delay time
 
 ### Try it
+####### *TODO:* Add instructions to use docker
+
 
 Go build first.
 
