@@ -101,17 +101,14 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 			ctlStream: ctlStream,
 		})
 
-		if !ok {
-			fmt.Printf("[server:tunnelListener] Failed again..Closing this connection\n")
-			close()
-
-			return
-		}
-
 		// close()
 	}
 
-	fmt.Printf("[server:tunnelListener] Older host disconnected & new one connected\n")
+	if !ok {
+		fmt.Printf("[server:tunnelListener] Failed again..Closing this connection\n")
+		close()
+
+	}
 
 	getOut := false
 
