@@ -12,9 +12,18 @@ services:
     client:
         build: .
         entrypoint: /bin/blazetunnel
-        command: client --tunnel "quic.meddler.xyz:2723" --local "localhost:3001" -i 3600
+        command: client --tunnel "quic.meddler.xyz:2723" --local "0.0.0.0:1080" -i 3600
         ports: 
             -   3001:3001/tcp
             -   2723:2723/udp
+        depends_on: 
+            -   mockserver
+
+    mockserver:
+        image: mockserver/mockserver
+        ports: 
+            -  1080:1080
+
+        
 
 
