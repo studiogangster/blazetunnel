@@ -27,16 +27,29 @@ Elimiate / Reduce Round-trip delay time
 
 ##### docker & docker-compose are required
 ```
-###  Customize docker-compose.yamL
-#### Services: 
-####     server (blazetunnel server): Needs to be run on exit node (internet)
-####     client (blazetunnel client): Node may or may not be behind NAT
-####     mockserver (A sample server that would be exposed to the internet)
+Customize docker-compose.yamL
+    Services: 
+        server (blazetunnel server): Needs to be run on exit node (internet)
+        client (blazetunnel client): Node may or may not be behind NAT
+        mockserver (A sample server that would be exposed to the internet)
 ```
 `*TODO:* Add instructions to use blazetunnel with docker`
 
 
 
+
+##  Instructions
+```
+
+Run 'Server' on internet facing node.
+Run 'Client' on local machine
+Create A record for *.domainname & domainname pointing to 'Server' node.
+
+Modify .env file in the root directory as follows:
+    DOMAIN_NAME => Domain name of the internet facing server / exit node 
+    SERVICE_NAME => Service name is the subdomain, that would be used to access the local server 
+
+```
 
 ##  Start server
 ```
@@ -50,34 +63,5 @@ docker-compose up server
 docker-compose up client
 ```
 
+#### Go to https://{service_name}.{domain_name} to access local server! Ex: https://quic.meddler.xyz
 
-
-
-Go build first.
-
-*Server*
-
-```
-# run qxpose as server mode with the configured sub domain as poniesareaweso.me
-# and the idle time out for QUIC sessions as an hour (default is 1/2 hour)
-qxpose server --domain poniesareaweso.me -i 3600
-```
-
-```
-# run qxpose as client mode with the following options
-#  1. Tunnel server: to the locally running one
-#  2. Local: Which local server/TCP address to proxy to public.
-#  3. Idle Timeout: idle time out for QUIC sessions as an hour (default is 1/2 hour)
-qxpose client --tunnel "localhost:2723" --local "localhost:8100" -i 3600
-```
-
-The client spits out a new hostname for the tunnel. (something like fb6b5b1749f59e70.poniesareaweso.me)
-For locally testing, edit the /etc/hosts to point
-the host to 127.0.0.1. 
-
-Something like this.
-```
-127.0.0.1   fb6b5b1749f59e70.poniesareaweso.me
-```
-
-Now try the address in the browser (insecure) or cURL (with `-k` flag).
