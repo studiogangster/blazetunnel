@@ -99,7 +99,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	// ServerName := "quic.meddler.xyz"
 
-	fmt.Println("Connecting to : ", ServerName, conn.RemoteAddr(), conn.LocalAddr())
+	fmt.Println("Connecting to : ", ServerName) //, conn.RemoteAddr(), conn.LocalAddr())
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
@@ -111,7 +111,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 	crwc := common.NewCompressedStream(rwc)
 
 	// Not doing in go routine...Can be improved
-	_, err = crwc.Write(reqHeaderConn.Bytes())
+	_, err = rwc.Write(reqHeaderConn.Bytes())
 
 	if err != nil {
 		fmt.Printf("[Error while writting header response to tunnel")
