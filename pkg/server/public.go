@@ -119,7 +119,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 		fmt.Printf("[Error while writting header response to tunnel")
 	}
 
-	go io.Copy(crwc, conn)
+	go io.Copy(crwc, _conn)
 	if _, err := io.Copy(conn, crwc); err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
 		return
