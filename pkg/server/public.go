@@ -71,7 +71,7 @@ func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
 		}
 
 		if strings.HasPrefix(message, "Host: ") {
-			Host = strings.Split(message, "Host: ")[1]
+			message = strings.Split(message, "Host: ")[1]
 			Host = strings.Split(message, ":")[0]
 			err = nil
 			// Host header found in request header
