@@ -14,7 +14,20 @@ services:
     client:
         build: .
         entrypoint: /bin/blazetunnel
-        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}:2723" --local "mockserver:3001" -i 3600
+        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}:2723" --local "mockserver:8000" -i 3600
+        env_file:
+            - .env
+        ports:
+            - 3001:3001/tcp
+            - 2723:2723/udp
+        depends_on:
+            - mockserver
+
+
+    prodclient:
+        build: https://github.com/rounak316/blazetunnel.git
+        entrypoint: /bin/blazetunnel
+        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}:2723" --local "mockserver:8000" -i 3600
         env_file:
             - .env
         ports:
@@ -24,8 +37,6 @@ services:
             - mockserver
 
     mockserver:
-        image: php
-        network_mode: "host"
-        command: php -S 0.0.0.0:3001
-        ports:
-            - 3001:3001/tcp
+        image: opensecurity/mobile-security-framework-mobsf
+        expose:
+            - 8000

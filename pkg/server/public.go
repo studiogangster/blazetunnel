@@ -2,9 +2,14 @@ package server
 
 import (
 	"blazetunnel/common"
+	"bufio"
+	"bytes"
+	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net"
+	"strings"
 )
 
 func (s *Server) initPublic() error {
@@ -32,11 +37,64 @@ func (s *Server) startPublic() {
 	}
 }
 
+// Finding host over TCP connection
+func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
+
+	err = errors.New("Host header not found")
+
+	var buf = bufio.NewReader(conn)
+
+	Host = ""
+
+	CRLF := "\r\n"
+
+	for {
+		// will listen for message to process ending in newline (\n)
+
+		var message string
+		message, err = buf.ReadString('\n')
+
+		if err != nil {
+			log.Println("Error", err)
+			buffer.Reset()
+			return
+		}
+
+		// Copy message to header
+		buffer.Write([]byte(message))
+
+		if message == CRLF {
+			log.Println("End")
+			// buffer.Write([]byte(CRLF))
+			// Request Headers ended
+			return
+		}
+
+		if strings.HasPrefix(message, "Host:") {
+			Host = strings.Split(message, "\n")[1]
+			err = nil
+			// Host header found in request header
+			break
+
+		}
+
+	}
+
+	return
+}
+
 func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	ServerName := "quic.meddler.xyz"
+	err, ServerName, reqHeaderConn := findHost(conn)
+
+	if err != nil {
+		log.Println("Error occured while finding host", err)
+		return
+	}
+
+	// ServerName := "quic.meddler.xyz"
 
 	fmt.Println("Connecting to : ", ServerName, conn.RemoteAddr(), conn.LocalAddr())
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
@@ -48,6 +106,13 @@ func (s *Server) handlePublic(conn net.Conn) {
 	defer rwc.Close()
 
 	crwc := common.NewCompressedStream(rwc)
+
+	// Not doing in go routine...Can be improved
+	_, err = crwc.Write(reqHeaderConn.Bytes())
+
+	if err != nil {
+		fmt.Printf("[Error while writting header response to tunnel")
+	}
 
 	go io.Copy(crwc, conn)
 	if _, err := io.Copy(conn, crwc); err != nil {
