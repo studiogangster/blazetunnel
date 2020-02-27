@@ -94,6 +94,8 @@ func (s *Server) handlePublic(conn net.Conn) {
 		return
 	}
 
+	log.Println("Host found", ServerName)
+
 	// ServerName := "quic.meddler.xyz"
 
 	fmt.Println("Connecting to : ", ServerName, conn.RemoteAddr(), conn.LocalAddr())
