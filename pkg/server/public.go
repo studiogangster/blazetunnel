@@ -38,11 +38,14 @@ func (s *Server) startPublic() {
 }
 
 // Finding host over TCP connection
-func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
+func findHost(conn net.Conn) (err error, Host string) {
 
 	err = errors.New("Host header not found")
 
-	var buf = bufio.NewReader(conn)
+	var buf bytes.Buffer
+	tee := io.TeeReader(conn, &buf)
+
+	var _buf = bufio.NewReader(tee)
 
 	Host = ""
 
@@ -52,16 +55,12 @@ func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
 		// will listen for message to process ending in newline (\n)
 
 		var message string
-		message, err = buf.ReadString('\n')
+		message, err = _buf.ReadString('\n')
 
 		if err != nil {
 			log.Println("Error", err)
-			buffer.Reset()
 			return
 		}
-
-		// Copy message to header
-		buffer.Write([]byte(message))
 
 		if message == CRLF {
 			log.Println("End")
@@ -88,7 +87,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	err, ServerName, reqHeaderConn := findHost(conn)
+	err, ServerName := findHost(conn)
 
 	if err != nil {
 		log.Println("Error occured while finding host", err)
@@ -111,7 +110,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 	crwc := common.NewCompressedStream(rwc)
 
 	// Not doing in go routine...Can be improved
-	_, err = rwc.Write(reqHeaderConn.Bytes())
+	// _, err = rwc.Write(reqHeaderConn.Bytes())
 
 	if err != nil {
 		fmt.Printf("[Error while writting header response to tunnel")
