@@ -38,11 +38,12 @@ func (s *Server) startPublic() {
 }
 
 // Finding host over TCP connection
-func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
+func findHost(conn bufio.Reader) (err error, Host string, buffer bytes.Buffer) {
+
+	// var buf bytes.Buffer
+	// tee := io.TeeReader(conn, &buf)
 
 	err = errors.New("Host header not found")
-
-	var buf = bufio.NewReader(conn)
 
 	Host = ""
 
@@ -52,7 +53,7 @@ func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
 		// will listen for message to process ending in newline (\n)
 
 		var message string
-		message, err = buf.ReadString('\n')
+		message, err = conn.ReadString('\n')
 
 		if err != nil {
 			log.Println("Error", err)
@@ -88,7 +89,8 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	err, ServerName, reqHeaderConn := findHost(conn)
+	_conn := bufio.NewReader(conn)
+	err, ServerName, reqHeaderConn := findHost(*_conn)
 
 	if err != nil {
 		log.Println("Error occured while finding host", err)
