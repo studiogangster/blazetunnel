@@ -38,14 +38,11 @@ func (s *Server) startPublic() {
 }
 
 // Finding host over TCP connection
-func findHost(conn net.Conn) (err error, Host string) {
+func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
 
 	err = errors.New("Host header not found")
 
-	var buf bytes.Buffer
-	tee := io.TeeReader(conn, &buf)
-
-	var _buf = bufio.NewReader(tee)
+	var buf = bufio.NewReader(conn)
 
 	Host = ""
 
@@ -55,12 +52,16 @@ func findHost(conn net.Conn) (err error, Host string) {
 		// will listen for message to process ending in newline (\n)
 
 		var message string
-		message, err = _buf.ReadString('\n')
+		message, err = buf.ReadString('\n')
 
 		if err != nil {
 			log.Println("Error", err)
+			buffer.Reset()
 			return
 		}
+
+		// Copy message to header
+		buffer.Write([]byte(message))
 
 		if message == CRLF {
 			log.Println("End")
@@ -87,7 +88,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	err, ServerName := findHost(conn)
+	err, ServerName, reqHeaderConn := findHost(conn)
 
 	if err != nil {
 		log.Println("Error occured while finding host", err)
@@ -98,7 +99,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	// ServerName := "quic.meddler.xyz"
 
-	fmt.Println("Connecting to : ", ServerName) //, conn.RemoteAddr(), conn.LocalAddr())
+	fmt.Println("Connecting to : ", ServerName, conn.RemoteAddr(), conn.LocalAddr())
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
@@ -110,7 +111,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 	crwc := common.NewCompressedStream(rwc)
 
 	// Not doing in go routine...Can be improved
-	// _, err = rwc.Write(reqHeaderConn.Bytes())
+	_, err = crwc.Write(reqHeaderConn.Bytes())
 
 	if err != nil {
 		fmt.Printf("[Error while writting header response to tunnel")
