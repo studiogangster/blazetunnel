@@ -91,7 +91,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	err, ServerName, reqHeaderConn := findHost(conn)
+	err, ServerName, _ := findHost(conn)
 
 	if err != nil {
 		log.Println("Error occured while finding host", err)
