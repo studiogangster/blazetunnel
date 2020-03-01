@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strings"
@@ -30,9 +31,13 @@ func main() {
 }
 
 func handle(conn net.Conn) {
+	conn.Write([]byte("starting rtesponse"))
 
 	err, host, headerStream := findHost(conn)
 
+	conn.Write([]byte("starting rtesponse"))
+
+	go io.Copy(conn, conn)
 	// conn.Write(buffer.Bytes())
 	if err != nil {
 		conn.Close()

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"blazetunnel/pkg/client"
 	"blazetunnel/pkg/server"
+	"fmt"
+	"os"
 
 	"github.com/urfave/cli"
 )

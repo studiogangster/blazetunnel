@@ -35,6 +35,10 @@ var l = fmt.Println
 
 // Start starts the peer connection to the tunnel server
 func (c *Client) Start() error {
+
+	// c.tunnel = "server:2723"
+
+	fmt.Println(c.tunnel)
 	tlsConf := &tls.Config{
 		InsecureSkipVerify: true,
 		NextProtos:         []string{"quic-echo-example"},
@@ -88,6 +92,7 @@ func (c *Client) handleStream(stream quic.Stream) {
 		fmt.Println("Closing")
 		stream.Close()
 	}()
+
 	dest, err := net.Dial("tcp", c.local)
 	if err != nil {
 		fmt.Printf("[client:localConnection] unable to open local connection: %s\n", err)

@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const requests = require('request');
 
 
-requests.get('https://buzz.gamepind.com/buzz_server/?EIO=3&transport=polling&t=N26kHac',
+requests.get('https://buzz.gamepind.com/buzz_server/?EIO=3&transport=polling&t=N2GEOet',
 
 
     {
@@ -10,8 +10,7 @@ requests.get('https://buzz.gamepind.com/buzz_server/?EIO=3&transport=polling&t=N
         {
             'Cookie':
 
-                '_ga=GA1.2.611139214.1580129948; _fbp=fb.1.1580129948503.1185898356; _gid=GA1.2.1178612749.1582783048; _ga=GA1.3.611139214.1580129948; _gid=GA1.3.1178612749.1582783048; _gat_UA-117948010-1=1; AWSALB=TA9XJyVeQu1gEcXI6qqUpPjYT06y3DU8Ar78haKaPNnr6owTbNWUrZPphyg1g0DzHmwOxtJKRE2Aibl5OYoXjtLkTwpOrqckzcAzm7TIgXlHVmGohXM7Sdh4KI7V; AWSALBCORS=TA9XJyVeQu1gEcXI6qqUpPjYT06y3DU8Ar78haKaPNnr6owTbNWUrZPphyg1g0DzHmwOxtJKRE2Aibl5OYoXjtLkTwpOrqckzcAzm7TIgXlHVmGohXM7Sdh4KI7V; io=oaZfyNtt9nzwRCnSAT1t'
-        },
+   '_ga=GA1.2.611139214.1580129948; _fbp=fb.1.1580129948503.1185898356; _ga=GA1.3.611139214.1580129948; _gid=GA1.2.1633700889.1582928890; _gid=GA1.3.1633700889.1582928890; _gat_UA-117948010-1=1; AWSALB=nsN+bgI7OcIrZt+frrr4GmHZ/nFpnhm40OD9HIzLUvzd9VjMoLHKjTbXF7pSzj5AYBl84R4m/d9IMYOUhM3I6qLuOrqBSxbbqDe+vJ0nqRMTQQXIuT++TLt8nwkK; AWSALBCORS=nsN+bgI7OcIrZt+frrr4GmHZ/nFpnhm40OD9HIzLUvzd9VjMoLHKjTbXF7pSzj5AYBl84R4m/d9IMYOUhM3I6qLuOrqBSxbbqDe+vJ0nqRMTQQXIuT++TLt8nwkK; io=pmrdgrNwja2Eu945BNc5'     },
     },
     function (error, response, body) {
         let sid = body.indexOf("sid") + 4 + 2

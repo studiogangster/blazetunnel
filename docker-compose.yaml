@@ -1,28 +1,34 @@
 version: "3"
 
 services:
-    server:
+    quick.server:
         build: .
-        entrypoint: /bin/blazetunnel
-        command: server --domain ${DOMAIN_NAME}  -i 3600
+        command: go run main.go server --domain ${DOMAIN_NAME} -i 3600
         env_file:
             - .env
         ports:
             - 443:443/tcp
             - 2723:2723/udp
 
+        volumes: 
+            - ./:/go/src/github.com/rounak316/blazetunnel
+
     client:
         build: .
-        entrypoint: /bin/blazetunnel
-        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}:2723" --local "mockserver:8000" -i 3600
+        container_name: client
         env_file:
             - .env
-        ports:
-            - 3001:3001/tcp
-            - 2723:2723/udp
+        command: "go run main.go client --tunnel ${DOMAIN_NAME}.${SERVICE_NAME}:2723 --local mockserver:8000 -i 3600"
+        
+        # extra_hosts:
+            # quick.server: 127.0.0.1
+        # ports:
+        # - 3001:3001/tcp
+        # - 2723:2723/udp
         depends_on:
             - mockserver
-
+        volumes: 
+            - ./:/go/src/github.com/rounak316/blazetunnel
 
     prodclient:
         build: https://github.com/rounak316/blazetunnel.git

@@ -11,7 +11,6 @@ import (
 )
 
 func generateTLSConfig() *tls.Config {
-
 	return generateTLSConfigFallback()
 }
 

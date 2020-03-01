@@ -2,6 +2,7 @@ package client
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/urfave/cli"
 )
@@ -9,6 +10,8 @@ import (
 // Init function initializes the client command
 // commandline functionality and retursn the cli.Command
 func Init() cli.Command {
+
+	fmt.Println("cfhgvjb")
 	return cli.Command{
 		Name:   "client",
 		Usage:  "Run a client instance",

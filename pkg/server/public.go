@@ -12,6 +12,13 @@ import (
 	"strings"
 )
 
+// Constants
+const HostPrefix = "Host: "
+const Crlf = "\r\n"
+const NextLine = byte('\n')
+
+//
+
 func (s *Server) initPublic() error {
 	cfg := generateTLSConfig()
 	fmt.Println("Allowed protos: ", cfg.NextProtos)
@@ -38,52 +45,44 @@ func (s *Server) startPublic() {
 }
 
 // Finding host over TCP connection
-func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
+func findHost(buf *bufio.Reader) (err error, Host string, buffer bytes.Buffer) {
 
 	// var buf bytes.Buffer
 	// tee := io.TeeReader(conn, &buf)
-
 	err = errors.New("Host header not found")
-
-	var buf = bufio.NewReader(conn)
-
 	Host = ""
 
-	CRLF := "\r\n"
-
 	for {
+		// TODO: Set readtimeout accordingly
+		// Need to make it configuratble as well
+		// TODO: Add maximum header size, max number of headers too, to avoid DOS attacks
 		// will listen for message to process ending in newline (\n)
-
 		var message string
-		message, err = buf.ReadString('\n')
-
+		message, err = buf.ReadString(NextLine)
+		// Copy message to header
+		buffer.Write([]byte(message))
 		if err != nil {
 			log.Println("Error", err)
 			buffer.Reset()
 			return
 		}
 
-		// Copy message to header
-		buffer.Write([]byte(message))
-
-		if message == CRLF {
-			log.Println("End")
+		if message == Crlf {
+			// log.Println("Request ")
 			// buffer.Write([]byte(CRLF))
 			// Request Headers ended
 			return
 		}
 
-		if strings.HasPrefix(message, "Host: ") {
-			message = strings.Split(message, "Host: ")[1]
+		if strings.HasPrefix(message, HostPrefix) {
+
+			message = message[6:]
 			Host = strings.Split(message, ":")[0]
 			err = nil
 			// Host header found in request header
 			break
-
 		}
-
 	}
-
 	return
 }
 
@@ -91,18 +90,17 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	err, ServerName, _ := findHost(conn)
+	originaReader := bufio.NewReader(conn)
+	err, ServerName, preRequest := findHost(originaReader)
+	// ServerName := "quick.server"
+	// var err error
 
+	log.Println("host found", ServerName)
 	if err != nil {
 		log.Println("Error occured while finding host", err)
 		return
 	}
 
-	log.Println("Host found", ServerName)
-
-	// ServerName := "quic.meddler.xyz"
-
-	fmt.Println("Connecting to : ", ServerName, conn.RemoteAddr(), conn.LocalAddr())
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
@@ -110,17 +108,18 @@ func (s *Server) handlePublic(conn net.Conn) {
 	}
 
 	defer rwc.Close()
-
 	crwc := common.NewCompressedStream(rwc)
-
 	// Not doing in go routine...Can be improved
-	// _, err = crwc.Write(reqHeaderConn.Bytes())
+	_, err = crwc.Write(preRequest.Bytes())
 
 	if err != nil {
 		fmt.Printf("[Error while writting header response to tunnel")
 	}
 
-	go io.Copy(crwc, conn)
+	go func() {
+		wreitten, err := io.Copy(crwc, originaReader)
+		log.Println("copying data", wreitten, err)
+	}()
 	if _, err := io.Copy(conn, crwc); err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
 		return

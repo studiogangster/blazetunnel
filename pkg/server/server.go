@@ -1,9 +1,8 @@
 package server
 
 import (
-	"net"
-
 	"github.com/lucas-clemente/quic-go"
+	"net"
 )
 
 // Server struct contains the runtime configuration
