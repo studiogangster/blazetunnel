@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"os"
 	"time"
 
 	"github.com/lucas-clemente/quic-go"
@@ -29,6 +30,12 @@ func NewClient(tunnel, local string, idleTimeout uint) *Client {
 		local:       local,
 		idleTimeout: idleTimeout,
 	}
+}
+
+func GetServiceName() string {
+
+	return os.Getenv("SERVICE_NAME")
+
 }
 
 var l = fmt.Println
@@ -57,7 +64,7 @@ func (c *Client) Start() error {
 	}
 	defer ctlStream.Close()
 
-	err = newmsg(common.CommandNewClient, "").EncodeTo(ctlStream)
+	err = newmsg(common.CommandNewClient, GetServiceName()).EncodeTo(ctlStream)
 	if err != nil {
 		return err
 	}

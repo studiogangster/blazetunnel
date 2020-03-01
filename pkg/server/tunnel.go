@@ -68,7 +68,9 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		return
 	}
 
-	exposedDomain := genRandomString() + "." + s.domain
+	serviceName := m.Context
+
+	exposedDomain := serviceName + "." + s.domain
 	err = newmsg(common.CommandSetConfig, exposedDomain).EncodeTo(ctlStream)
 	if err != nil {
 		fmt.Printf("[server:tunnelListener] unable to encode to msgpack: %s\n", err)

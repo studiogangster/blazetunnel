@@ -18,7 +18,7 @@ services:
         container_name: client
         env_file:
             - .env
-        command: "go run main.go client --tunnel ${DOMAIN_NAME}.${SERVICE_NAME}:2723 --local mockserver:8000 -i 3600"
+        command: "go run main.go client --tunnel ${SERVICE_NAME}.${DOMAIN_NAME}:2723 --local mockserver:8000 -i 3600"
         
         # extra_hosts:
             # quick.server: 127.0.0.1
