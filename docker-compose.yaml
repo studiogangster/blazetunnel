@@ -1,20 +1,18 @@
 version: "3"
 
 services:
-    quick.server:
+    server:
         build: .
         container_name: server
         env_file:
             - .env
         command: server --domain ${DOMAIN_NAME} -i 3600
-        env_file:
-            - .env
         ports:
             - 443:443/tcp
             - 2723:2723/udp
 
-        volumes: 
-            - ./:/go/src/github.com/rounak316/blazetunnel
+        # volumes: 
+            # - ./:/go/src/github.com/rounak316/blazetunnel
 
     client:
         build: .
