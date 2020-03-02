@@ -97,7 +97,6 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
-	conn.SetReadDeadline(time.Now().Add(timeoutDuration))
 	originaReader := bufio.NewReader(conn)
 	err, ServerName, preRequest := findHost(conn, originaReader)
 	// ServerName := "quick.server"
