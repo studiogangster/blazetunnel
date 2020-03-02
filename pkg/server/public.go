@@ -10,6 +10,7 @@ import (
 	"log"
 	"net"
 	"strings"
+	"time"
 )
 
 // Constants
@@ -44,8 +45,10 @@ func (s *Server) startPublic() {
 	}
 }
 
+const timeoutDuration = 3 * time.Second
+
 // Finding host over TCP connection
-func findHost(buf *bufio.Reader) (err error, Host string, buffer bytes.Buffer) {
+func findHost(conn net.Conn, buf *bufio.Reader) (err error, Host string, buffer bytes.Buffer) {
 
 	// var buf bytes.Buffer
 	// tee := io.TeeReader(conn, &buf)
@@ -53,6 +56,9 @@ func findHost(buf *bufio.Reader) (err error, Host string, buffer bytes.Buffer) {
 	Host = ""
 
 	for {
+
+		conn.SetReadDeadline(time.Now().Add(timeoutDuration))
+
 		// TODO: Set readtimeout accordingly
 		// Need to make it configuratble as well
 		// TODO: Add maximum header size, max number of headers too, to avoid DOS attacks
@@ -78,6 +84,7 @@ func findHost(buf *bufio.Reader) (err error, Host string, buffer bytes.Buffer) {
 
 			message = message[6:]
 			Host = strings.Split(message, ":")[0]
+			fmt.Println("HOST Request %s", Host)
 			err = nil
 			// Host header found in request header
 			break
@@ -90,8 +97,9 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	defer conn.Close()
 
+	conn.SetReadDeadline(time.Now().Add(timeoutDuration))
 	originaReader := bufio.NewReader(conn)
-	err, ServerName, preRequest := findHost(originaReader)
+	err, ServerName, preRequest := findHost(conn, originaReader)
 	// ServerName := "quick.server"
 	// var err error
 
