@@ -6,7 +6,7 @@ services:
         container_name: server
         env_file:
             - .env
-        command: go run main.go server --domain ${DOMAIN_NAME} -i 3600
+        command: server --domain ${DOMAIN_NAME} -i 3600
         env_file:
             - .env
         ports:

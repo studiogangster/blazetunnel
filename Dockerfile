@@ -16,5 +16,5 @@ COPY --from=server_builder /go/bin/blazetunnel /bin/blazetunnel
 # Layer to execute binary
 FROM server_builder  AS runner
 COPY --from=server_builder /go/bin/blazetunnel /bin/blazetunnel
-# ENTRYPOINT /bin/blazetunnel
+ENTRYPOINT /bin/blazetunnel
 
