@@ -5,10 +5,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"net"
 	"strings"
+
+	"acln.ro/zerocopy"
 )
 
 func main() {
@@ -37,7 +38,7 @@ func handle(conn net.Conn) {
 
 	conn.Write([]byte("starting rtesponse"))
 
-	go io.Copy(conn, conn)
+	go zerocopy.Transfer(conn, conn)
 	// conn.Write(buffer.Bytes())
 	if err != nil {
 		conn.Close()

@@ -6,11 +6,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"net"
 	"strings"
 	"time"
+
+	"acln.ro/zerocopy"
 )
 
 // Constants
@@ -126,10 +127,10 @@ func (s *Server) handlePublic(conn net.Conn) {
 	}
 
 	go func() {
-		wreitten, err := io.Copy(crwc, originaReader)
+		wreitten, err := zerocopy.Transfer(crwc, originaReader)
 		log.Println("copying data", wreitten, err)
 	}()
-	if _, err := io.Copy(conn, crwc); err != nil {
+	if _, err := zerocopy.Transfer(conn, crwc); err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
 		return
 	}

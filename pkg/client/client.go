@@ -5,11 +5,11 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"io"
 	"net"
 	"os"
 	"time"
 
+	"acln.ro/zerocopy"
 	"github.com/lucas-clemente/quic-go"
 )
 
@@ -107,10 +107,8 @@ func (c *Client) handleStream(stream quic.Stream) {
 	}
 	defer dest.Close()
 
-	// go io.Copy(dest, stream)
-
-	go io.Copy(dest, stream)
-	if _, err := io.Copy(stream, dest); err != nil {
+	go zerocopy.Transfer(dest, stream)
+	if _, err := zerocopy.Transfer(stream, dest); err != nil {
 		fmt.Printf("[client:localConnection] unable to open local connection: %s\n", err)
 		return
 	}
