@@ -109,6 +109,8 @@ func (s *Server) handlePublic(conn net.Conn) {
 		return
 	}
 
+	conn.SetReadDeadline(time.Time{})
+
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
