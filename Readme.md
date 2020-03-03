@@ -1,6 +1,6 @@
 # blazetunnel
 
-Experimenting QUIC protocol to create P2P tunnel between private intranets and expose all services within interconnected network to internet without Static IP.
+Experimenting QUIC protocol to create P2P tunnel between private intranets and expose all services within interconnected network to internet without Static IP or NAT.
    
 ######   Status
 Currently in experimental stage. 
