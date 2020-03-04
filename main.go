@@ -1,6 +1,7 @@
 package main
 
 import (
+	"blazetunnel/pkg/auth"
 	"blazetunnel/pkg/client"
 	"blazetunnel/pkg/server"
 	"log"
@@ -20,6 +21,7 @@ func main() {
 		Commands: []*cli.Command{
 			server.Init(),
 			client.Init(),
+			auth.Init(),
 		},
 	}
 

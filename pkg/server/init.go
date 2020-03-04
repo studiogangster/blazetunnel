@@ -13,10 +13,10 @@ const (
 // server mode
 func Init() *cli.Command {
 	return &(cli.Command{
-		Name:    "server",
-		Aliases: []string{"s", "S"},
-		Usage:   "Run a server instance",
-		Action:  createServer,
+		Name: "server",
+
+		Usage:  "Run a server instance",
+		Action: createServer,
 
 		Flags: []cli.Flag{
 			&cli.StringFlag{
