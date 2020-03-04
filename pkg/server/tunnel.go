@@ -3,7 +3,7 @@ package server
 import (
 	"blazetunnel/common"
 	"context"
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/lucas-clemente/quic-go"
@@ -13,7 +13,7 @@ var newmsg = common.NewMessage
 
 func (s *Server) initTunnel() error {
 	cfg := generateTLSConfig()
-	fmt.Println("Allowed protos: ", cfg.NextProtos)
+	log.Println("Allowed protos: ", cfg.NextProtos)
 	cfg.NextProtos = []string{"h2", "http/1.1", "acme-tls/1", "quic-echo-example"}
 	ln, err := quic.ListenAddr(":2723", cfg, &quic.Config{
 		IdleTimeout: time.Second * time.Duration(s.idleTimeout),
@@ -30,7 +30,7 @@ func (s *Server) startTunnel() {
 	for {
 		session, err := s.tunnelListener.Accept(context.Background())
 		if err != nil {
-			fmt.Printf("[server:tunnelListener] unable to open a client session : %s\n", err)
+			log.Printf("[server:tunnelListener] unable to open a client session : %s\n", err)
 			continue
 		}
 
@@ -47,7 +47,7 @@ func (s *Server) startTunnel() {
 func (s *Server) handleTunnelSession(session quic.Session) {
 	ctlStream, err := session.AcceptStream(context.Background())
 	if err != nil {
-		fmt.Printf("[server:tunnelListener] unable to accept a client stream : %s\n", err)
+		log.Printf("[server:tunnelListener] unable to accept a client stream : %s\n", err)
 		return
 	}
 
@@ -58,12 +58,12 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 
 	m, err := newmsg("", "").DecodeFrom(ctlStream)
 	if err != nil {
-		fmt.Printf("[server:tunnelListener] unable to decode msgpack: %s\n", err)
+		log.Printf("[server:tunnelListener] unable to decode msgpack: %s\n", err)
 		close()
 		return
 	}
 	if m.Command != common.CommandNewClient {
-		fmt.Printf("[server:tunnelListener] expected NewClient command, got: %s\n", m.Command)
+		log.Printf("[server:tunnelListener] expected NewClient command, got: %s\n", m.Command)
 		close()
 		return
 	}
@@ -73,7 +73,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 	exposedDomain := serviceName + "." + s.domain
 	err = newmsg(common.CommandSetConfig, exposedDomain).EncodeTo(ctlStream)
 	if err != nil {
-		fmt.Printf("[server:tunnelListener] unable to encode to msgpack: %s\n", err)
+		log.Printf("[server:tunnelListener] unable to encode to msgpack: %s\n", err)
 		close()
 		return
 	}
@@ -85,8 +85,8 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 	})
 
 	if !ok {
-		fmt.Printf("[server:tunnelListener] server host config already found.\n")
-		fmt.Printf("[server:tunnelListener] trying to cose older and connect again.\n")
+		log.Printf("[server:tunnelListener] server host config already found.\n")
+		log.Printf("[server:tunnelListener] trying to cose older and connect again.\n")
 
 		tunnelRef, ifExists := s.hostmap.Get(exposedDomain)
 		if ifExists {
@@ -94,9 +94,9 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 			s.hostmap.Delete(exposedDomain)
 		}
 
-		fmt.Printf("[server:tunnelListener] Older connection closed & deleted\n")
+		log.Printf("[server:tunnelListener] Older connection closed & deleted\n")
 
-		fmt.Printf("[server:tunnelListener] Trying to update hostmap again\n")
+		log.Printf("[server:tunnelListener] Trying to update hostmap again\n")
 		// Try to put again.
 		ok = s.hostmap.Put(exposedDomain, &TunnelState{
 			session:   session,
@@ -107,7 +107,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 	}
 
 	if !ok {
-		fmt.Printf("[server:tunnelListener] Failed again..Closing this connection\n")
+		log.Printf("[server:tunnelListener] Failed again..Closing this connection\n")
 		close()
 
 	}
@@ -117,16 +117,16 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 	for !getOut {
 		m, err := newmsg("", "").DecodeFrom(ctlStream)
 		if err != nil {
-			fmt.Printf("[server:pong] unable to decode from msgpack: %s\n", err)
+			log.Printf("[server:pong] unable to decode from msgpack: %s\n", err)
 			close()
 			return
 		}
 		switch m.Command {
 		case common.CommandPingPeer:
-			fmt.Printf("[server:message] Got ping from %s\n", session.RemoteAddr())
+			log.Printf("[server:message] Got ping from %s\n", session.RemoteAddr())
 			err = newmsg(common.CommandPongPeer, "").EncodeTo(ctlStream)
 			if err != nil {
-				fmt.Printf("[server:pong] unable to encode to msgpack: %s\n", err)
+				log.Printf("[server:pong] unable to encode to msgpack: %s\n", err)
 				close()
 				getOut = true
 				break

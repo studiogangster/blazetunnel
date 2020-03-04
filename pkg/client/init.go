@@ -2,38 +2,36 @@ package client
 
 import (
 	"errors"
-	"fmt"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // Init function initializes the client command
 // commandline functionality and retursn the cli.Command
-func Init() cli.Command {
+func Init() *cli.Command {
 
-	fmt.Println("cfhgvjb")
-	return cli.Command{
+	return &(cli.Command{
 		Name:   "client",
 		Usage:  "Run a client instance",
 		Action: createClient,
 		Flags: []cli.Flag{
-			cli.StringFlag{
+			&cli.StringFlag{
 				Name:     "tunnel",
 				Usage:    "Remote public tunnel address to connect to",
 				Required: true,
 			},
-			cli.StringFlag{
+			&cli.StringFlag{
 				Name:     "local",
 				Usage:    "Local TCP server to proxy the connections to",
 				Required: true,
 			},
-			cli.UintFlag{
+			&cli.UintFlag{
 				Name:  "i,idle-timeout",
 				Usage: "Idle timeout for the quic sessions (in seconds)",
 				Value: 1800,
 			},
 		},
-	}
+	})
 }
 
 func createClient(ctx *cli.Context) error {

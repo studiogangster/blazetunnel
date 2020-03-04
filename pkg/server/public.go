@@ -5,7 +5,6 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -15,15 +14,13 @@ import (
 )
 
 // Constants
-const HostPrefix = "Host: "
-const Crlf = "\r\n"
-const NextLine = byte('\n')
+const hostPrefix, crlf, nextLine = "Host: ", "\r\n", byte('\n')
 
 //
 
 func (s *Server) initPublic() error {
 	cfg := generateTLSConfig()
-	fmt.Println("Allowed protos: ", cfg.NextProtos)
+	log.Println("Allowed protos: ", cfg.NextProtos)
 	cfg.NextProtos = []string{"http/1.1", "acme-tls/1", "quic-echo-example"}
 	ln, err := net.Listen("tcp", ":443")
 	if err != nil {
@@ -38,7 +35,7 @@ func (s *Server) startPublic() {
 	for {
 		conn, err := s.publicListener.Accept()
 		if err != nil {
-			fmt.Printf("[server:publicListener] unable to accept connection: %s\n", err)
+			log.Printf("[server:publicListener] unable to accept connection: %s\n", err)
 			continue
 		}
 
@@ -65,7 +62,7 @@ func findHost(conn net.Conn, buf *bufio.Reader) (err error, Host string, buffer 
 		// TODO: Add maximum header size, max number of headers too, to avoid DOS attacks
 		// will listen for message to process ending in newline (\n)
 		var message string
-		message, err = buf.ReadString(NextLine)
+		message, err = buf.ReadString(nextLine)
 		// Copy message to header
 		buffer.Write([]byte(message))
 		if err != nil {
@@ -74,18 +71,18 @@ func findHost(conn net.Conn, buf *bufio.Reader) (err error, Host string, buffer 
 			return
 		}
 
-		if message == Crlf {
+		if message == crlf {
 			// log.Println("Request ")
 			// buffer.Write([]byte(CRLF))
 			// Request Headers ended
 			return
 		}
 
-		if strings.HasPrefix(message, HostPrefix) {
+		if strings.HasPrefix(message, hostPrefix) {
 
 			message = message[6:]
 			Host = strings.Split(message, ":")[0]
-			fmt.Println("HOST Request %s", Host)
+			log.Println("HOST Request %s", Host)
 			err = nil
 			// Host header found in request header
 			break
@@ -113,7 +110,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 
 	rwc, err := s.hostmap.NewStreamFor(ServerName)
 	if err != nil {
-		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
+		log.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
 		return
 	}
 
@@ -123,7 +120,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 	_, err = crwc.Write(preRequest.Bytes())
 
 	if err != nil {
-		fmt.Printf("[Error while writting header response to tunnel")
+		log.Printf("[Error while writting header response to tunnel")
 	}
 
 	go func() {
@@ -131,7 +128,7 @@ func (s *Server) handlePublic(conn net.Conn) {
 		log.Println("copying data")
 	}()
 	if _, err := zerocopy.Transfer(conn, crwc); err != nil {
-		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
+		log.Printf("[server:publicListener] unable to open a client stream: %s\n", err)
 		return
 	}
 }

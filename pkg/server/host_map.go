@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log"
 	"net"
 	"sync"
 
@@ -44,7 +44,7 @@ func (hm *HostMap) NewStreamFor(host string) (quic.Stream, error) {
 	}
 
 	if neterr.Timeout() {
-		fmt.Printf("[HostMap:NewStreamFor] Timeout occurred. Removing the configuration")
+		log.Printf("[HostMap:NewStreamFor] Timeout occurred. Removing the configuration")
 	}
 
 	hm.Delete(host)
@@ -55,7 +55,7 @@ func (hm *HostMap) NewStreamFor(host string) (quic.Stream, error) {
 // Put is used to map a new host to a tunnel state
 // If the host configuration is already present, false is returned
 func (hm *HostMap) Put(host string, ts *TunnelState) bool {
-	fmt.Println("server client ", host)
+	log.Println("server client ", host)
 	hm.mx.Lock()
 	_, ok := hm.hosts[host]
 	if ok {
