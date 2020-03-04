@@ -1,4 +1,4 @@
-package client
+package auth
 
 import (
 	"errors"
@@ -11,25 +11,25 @@ import (
 func Init() *cli.Command {
 
 	return &(cli.Command{
-		Name: "client",
+		Name: "auth",
 
-		Usage:  "Run a client instance",
+		Usage:  "Authenticate with server to reserve a subdomain for your service",
 		Action: createClient,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:     "tunnel",
-				Usage:    "Remote public tunnel address to connect to",
+				Name:     "server",
+				Usage:    "Auth server address",
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:     "local",
-				Usage:    "Local TCP server to proxy the connections to",
+				Name:     "username",
+				Usage:    "Username",
 				Required: true,
 			},
-			&cli.UintFlag{
-				Name:  "i,idle-timeout",
-				Usage: "Idle timeout for the quic sessions (in seconds)",
-				Value: 1800,
+			&cli.StringFlag{
+				Name:     "password",
+				Usage:    "Password",
+				Required: true,
 			},
 		},
 	})
@@ -46,5 +46,6 @@ func createClient(ctx *cli.Context) error {
 		return errors.New("Local address cannot be empty")
 	}
 
-	return NewClient(tunnel, local, ctx.Uint("i")).Start()
+	return errors.New("Authentication not implemented yet!")
+	// return NewClient(tunnel, local, ctx.Uint("i")).Start()
 }
