@@ -120,10 +120,11 @@ func (c *Client) handleCtlStream(ctlStream quic.Stream) {
 		fmt.Printf("[server:pong] unable to decode from msgpack: %s\n", err)
 		return
 	}
-	ctlStream.SetReadDeadline(time.Now().Add(time.Minute))
 
 	getOut := false
 	for !getOut {
+		ctlStream.SetReadDeadline(time.Now().Add(time.Second * 5))
+
 		m, err := newmsg("", "").DecodeFrom(ctlStream)
 		if err != nil {
 			fmt.Printf("[client:ping] unable to decode from msgpack: %s\n", err)
@@ -139,7 +140,7 @@ func (c *Client) handleCtlStream(ctlStream quic.Stream) {
 				getOut = true
 				break
 			}
-			ctlStream.SetReadDeadline(time.Now().Add(time.Minute))
+
 		}
 
 	}

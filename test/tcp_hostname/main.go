@@ -38,7 +38,7 @@ func handle(conn net.Conn) {
 
 	conn.Write([]byte("starting rtesponse"))
 
-	go zerocopy.Transfer(conn, conn)
+	go zerocopy.Transfer (conn, conn)
 	// conn.Write(buffer.Bytes())
 	if err != nil {
 		conn.Close()

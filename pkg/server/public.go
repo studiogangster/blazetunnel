@@ -127,8 +127,8 @@ func (s *Server) handlePublic(conn net.Conn) {
 	}
 
 	go func() {
-		wreitten, err := zerocopy.Transfer(crwc, originaReader)
-		log.Println("copying data", wreitten, err)
+		zerocopy.Transfer(crwc, originaReader)
+		log.Println("copying data")
 	}()
 	if _, err := zerocopy.Transfer(conn, crwc); err != nil {
 		fmt.Printf("[server:publicListener] unable to open a client stream: %s\n", err)

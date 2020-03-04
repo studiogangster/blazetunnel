@@ -1,0 +1,4 @@
+05c1c8541a16d9bfe45c213e30676cc8cce4982470f895aa3d7e8623fbe8575c  blazetunnel_v0.0.0-next_Linux_x86_64.tar.gz
+8b79472ac105430f0a797d35463830d9badee45d1e19a46bea10beda7db17b4c  blazetunnel_v0.0.0-next_Darwin_x86_64.tar.gz
+a305418a184e76c2a547cd698f8eba833d2e56f9f2df46ae0053a96dac4bd69c  blazetunnel_v0.0.0-next_Darwin_i386.tar.gz
+a91f8a652b8ce92e73b51aceee318ad849c377573ca631c266fca27f4f7cb243  blazetunnel_v0.0.0-next_Linux_i386.tar.gz
