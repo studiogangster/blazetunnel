@@ -4,7 +4,7 @@ import (
 	"blazetunnel/common"
 	"context"
 	"crypto/tls"
-	"fmt"
+	"log"
 	"net"
 	"os"
 	"time"
@@ -38,14 +38,12 @@ func GetServiceName() string {
 
 }
 
-var l = fmt.Println
-
 // Start starts the peer connection to the tunnel server
 func (c *Client) Start() error {
 
 	// c.tunnel = "server:2723"
 
-	fmt.Println(c.tunnel)
+	log.Println(c.tunnel)
 	tlsConf := &tls.Config{
 		InsecureSkipVerify: true,
 		NextProtos:         []string{"quic-echo-example"},
@@ -69,26 +67,26 @@ func (c *Client) Start() error {
 		return err
 	}
 
-	l("Opened stream")
+	log.Println("Opened stream")
 	m, err := newmsg("", "").DecodeFrom(ctlStream)
 	if err != nil {
 		return err
 	}
 
-	l("Read msgpack message")
+	log.Println("Read msgpack message")
 
-	fmt.Printf("Message received: %s(%s)\n", m.Command, m.Context)
-	l("accepting connection")
+	log.Printf("Message received: %s(%s)\n", m.Command, m.Context)
+	log.Println("accepting connection")
 	go c.handleCtlStream(ctlStream)
 	i := 0
 	for {
 		stream, err := session.AcceptStream(context.Background())
 		if err != nil {
-			fmt.Printf("[client:tunnelConnection] unable to open a stream: %s\n", err)
+			log.Printf("[client:tunnelConnection] unable to open a stream: %s\n", err)
 			return err
 		}
 		i++
-		l("opened stream: ", i)
+		log.Println("opened stream: ", i)
 		go c.handleStream(common.NewCompressedStream(stream))
 	}
 
@@ -96,20 +94,20 @@ func (c *Client) Start() error {
 
 func (c *Client) handleStream(stream quic.Stream) {
 	defer func() {
-		fmt.Println("Closing")
+		log.Println("Closing")
 		stream.Close()
 	}()
 
 	dest, err := net.Dial("tcp", c.local)
 	if err != nil {
-		fmt.Printf("[client:localConnection] unable to open local connection: %s\n", err)
+		log.Printf("[client:localConnection] unable to open local connection: %s\n", err)
 		return
 	}
 	defer dest.Close()
 
 	go zerocopy.Transfer(dest, stream)
 	if _, err := zerocopy.Transfer(stream, dest); err != nil {
-		fmt.Printf("[client:localConnection] unable to open local connection: %s\n", err)
+		log.Printf("[client:localConnection] unable to open local connection: %s\n", err)
 		return
 	}
 }
@@ -117,7 +115,7 @@ func (c *Client) handleStream(stream quic.Stream) {
 func (c *Client) handleCtlStream(ctlStream quic.Stream) {
 	err := newmsg(common.CommandPingPeer, "").EncodeTo(ctlStream)
 	if err != nil {
-		fmt.Printf("[server:pong] unable to decode from msgpack: %s\n", err)
+		log.Printf("[server:pong] unable to decode from msgpack: %s\n", err)
 		return
 	}
 
@@ -127,16 +125,16 @@ func (c *Client) handleCtlStream(ctlStream quic.Stream) {
 
 		m, err := newmsg("", "").DecodeFrom(ctlStream)
 		if err != nil {
-			fmt.Printf("[client:ping] unable to decode from msgpack: %s\n", err)
+			log.Printf("[client:ping] unable to decode from msgpack: %s\n", err)
 			return
 		}
 		<-time.After(3 * time.Second)
 		switch m.Command {
 		case common.CommandPongPeer:
-			fmt.Printf("[client:message] Got pong from %s\n", c.tunnel)
+			log.Printf("[client:message] Got pong from %s\n", c.tunnel)
 			err = newmsg(common.CommandPingPeer, "").EncodeTo(ctlStream)
 			if err != nil {
-				fmt.Printf("[client:ping] unable to encode to msgpack: %s\n", err)
+				log.Printf("[client:ping] unable to encode to msgpack: %s\n", err)
 				getOut = true
 				break
 			}

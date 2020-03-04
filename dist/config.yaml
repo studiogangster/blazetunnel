@@ -86,6 +86,6 @@ before:
   - go mod download
   - go generate ./...
 github_urls:
-  download: https://github.com/rounak316/blazetunnel
+  download: https://github.com
 gitlab_urls:
   download: https://gitlab.com
