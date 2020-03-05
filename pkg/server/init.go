@@ -1,7 +1,9 @@
 package server
 
 import (
+	"blazetunnel/common"
 	"errors"
+
 	"github.com/urfave/cli/v2"
 )
 
@@ -30,6 +32,14 @@ func Init() *cli.Command {
 				Usage:   "Idle timeout for the quic sessions (in seconds)",
 				Value:   1800,
 			},
+
+			&cli.StringFlag{
+				Name:        "secret",
+				Aliases:     []string{"s"},
+				DefaultText: "Secret Key",
+				Usage:       "Idle timeout for the quic sessions (in seconds)",
+				Value:       "01234567890123456789012345678912",
+			},
 		},
 	})
 }
@@ -40,6 +50,12 @@ func createServer(ctx *cli.Context) error {
 		return errors.New(errDomain)
 	}
 
+	secret := ctx.String("secret")
+	if secret == "" {
+		return errors.New(errDomain)
+	}
+
+	common.SetSecretKey(secret)
 	NewServer(domain, ctx.Uint("i")).Start()
 	return nil
 }

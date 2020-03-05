@@ -10,28 +10,37 @@ import (
 // commandline functionality and retursn the cli.Command
 func Init() *cli.Command {
 
+	flags := []cli.Flag{
+		&cli.StringFlag{
+			Name:     "tunnel",
+			Usage:    "Remote public tunnel address to connect to",
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "local",
+			Usage:    "Local TCP server to proxy the connections to",
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "token",
+			Usage:    "auth-token ",
+			FilePath: ".blazetoken",
+			Required: true,
+		},
+		&cli.UintFlag{
+			Name:  "i,idle-timeout",
+			Usage: "Idle timeout for the quic sessions (in seconds)",
+			Value: 1800,
+		},
+	}
+
 	return &(cli.Command{
 		Name: "client",
 
 		Usage:  "Run a client instance",
 		Action: createClient,
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:     "tunnel",
-				Usage:    "Remote public tunnel address to connect to",
-				Required: true,
-			},
-			&cli.StringFlag{
-				Name:     "local",
-				Usage:    "Local TCP server to proxy the connections to",
-				Required: true,
-			},
-			&cli.UintFlag{
-				Name:  "i,idle-timeout",
-				Usage: "Idle timeout for the quic sessions (in seconds)",
-				Value: 1800,
-			},
-		},
+
+		Flags: flags,
 	})
 }
 
@@ -46,5 +55,10 @@ func createClient(ctx *cli.Context) error {
 		return errors.New("Local address cannot be empty")
 	}
 
-	return NewClient(tunnel, local, ctx.Uint("i")).Start()
+	token := ctx.String("token")
+	if token == "" {
+		return errors.New("Token can not be empty")
+	}
+
+	return NewClient(tunnel, local, ctx.Uint("i"), token).Start()
 }

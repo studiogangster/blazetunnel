@@ -21,14 +21,16 @@ type Client struct {
 	tunnel      string
 	local       string
 	idleTimeout uint
+	token       string
 }
 
 // NewClient is used to create a new client
-func NewClient(tunnel, local string, idleTimeout uint) *Client {
+func NewClient(tunnel, local string, idleTimeout uint, token string) *Client {
 	return &Client{
 		tunnel:      tunnel,
 		local:       local,
 		idleTimeout: idleTimeout,
+		token:       token,
 	}
 }
 
@@ -62,7 +64,7 @@ func (c *Client) Start() error {
 	}
 	defer ctlStream.Close()
 
-	err = newmsg(common.CommandNewClient, GetServiceName()).EncodeTo(ctlStream)
+	err = newmsg(common.CommandNewClient, c.token).EncodeTo(ctlStream)
 	if err != nil {
 		return err
 	}
