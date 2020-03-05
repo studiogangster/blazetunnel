@@ -62,9 +62,28 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		close()
 		return
 	}
+	if m.Command == common.CommandAuthClient {
+		log.Printf("[server:tunnelListener] Authenticating: %s %s\n", m.Command, m.Context)
+		err := newmsg(common.CommandAuthServer, m.Context).EnryptTo(ctlStream)
+		log.Println("Error", err)
+		// close()
+		return
+	}
+
 	if m.Command != common.CommandNewClient {
-		log.Printf("[server:tunnelListener] expected NewClient command, got: %s\n", m.Command)
+
+		log.Println("[server:tunnelListener] expected NewClient command, got:", m.Command, err)
 		close()
+		return
+	}
+
+	// Authenticate server
+
+	err = m.Authenticate()
+
+	if err != nil {
+		close()
+		log.Println("Authenticated successfully", m.Context)
 		return
 	}
 

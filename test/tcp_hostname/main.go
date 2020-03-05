@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -16,7 +15,7 @@ func main() {
 
 	l, err := net.Listen("tcp4", ":4040")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	defer l.Close()
@@ -24,7 +23,7 @@ func main() {
 	for {
 		c, err := l.Accept()
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
 		go handle(c)
@@ -38,7 +37,7 @@ func handle(conn net.Conn) {
 
 	conn.Write([]byte("starting rtesponse"))
 
-	go zerocopy.Transfer (conn, conn)
+	go zerocopy.Transfer(conn, conn)
 	// conn.Write(buffer.Bytes())
 	if err != nil {
 		conn.Close()
