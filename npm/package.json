@@ -1,6 +1,6 @@
 {
   "name": "blazetunnel",
-  "version": "v0.5",
+  "version": "v1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,6 @@
   "goBinary": {
     "name": "blazetunnel",
     "path": "./bin",
-    "url": "https://github.com/rounak316/blazetunnel/releases/download/v{{version}}/myGoPackage_{{version}}_{{platform}}_{{arch}}.tar.gz"
+    "url": "https://github.com/rounak316/blazetunnel/releases/download/v{{version}}/blazetunnel_{{version}}_{{platform}}_{{arch}}.tar.gz"
   }
 }
