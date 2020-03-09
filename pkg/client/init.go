@@ -39,8 +39,7 @@ func Init() *cli.Command {
 
 		Usage:  "Run a client instance",
 		Action: createClient,
-
-		Flags: flags,
+		Flags:  flags,
 	})
 }
 

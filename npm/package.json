@@ -1,0 +1,21 @@
+{
+  "name": "blazetunnel",
+  "version": "v0.5",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "author": "Prakhar Agnihotri",
+  "license": "ISC",
+  "dependencies": {
+    "go-npm": "^0.1.9"
+  },
+  "goBinary": {
+    "name": "blazetunnel",
+    "path": "./bin",
+    "url": "https://github.com/rounak316/blazetunnel/releases/download/v{{version}}/myGoPackage_{{version}}_{{platform}}_{{arch}}.tar.gz"
+  }
+}

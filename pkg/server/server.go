@@ -35,7 +35,7 @@ func (s *Server) init() error {
 }
 
 // Start starts the server by listening to the public instance and the
-// tunneling instance
+// tunneling instance0.0.
 func (s *Server) Start() error {
 	err := s.init()
 	if err != nil {

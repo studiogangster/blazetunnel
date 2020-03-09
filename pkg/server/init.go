@@ -37,7 +37,7 @@ func Init() *cli.Command {
 				Name:        "secret",
 				Aliases:     []string{"s"},
 				DefaultText: "Secret Key",
-				Usage:       "Idle timeout for the quic sessions (in seconds)",
+				Usage:       "Secret key to be used for encryption",
 				Value:       "01234567890123456789012345678912",
 			},
 		},
