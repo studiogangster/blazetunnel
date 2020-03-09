@@ -6,7 +6,7 @@ import (
 	"crypto/tls"
 	"log"
 	"net"
-	"os"
+	"sync"
 	"time"
 
 	"acln.ro/zerocopy"
@@ -22,6 +22,7 @@ type Client struct {
 	local       string
 	idleTimeout uint
 	token       string
+	sync.RWMutex
 }
 
 // NewClient is used to create a new client
@@ -32,12 +33,6 @@ func NewClient(tunnel, local string, idleTimeout uint, token string) *Client {
 		idleTimeout: idleTimeout,
 		token:       token,
 	}
-}
-
-func GetServiceName() string {
-
-	return os.Getenv("SERVICE_NAME")
-
 }
 
 // Start starts the peer connection to the tunnel server
@@ -100,7 +95,12 @@ func (c *Client) handleStream(stream quic.Stream) {
 		stream.Close()
 	}()
 
-	dest, err := net.Dial("tcp", c.local)
+	localhost := ""
+	c.RLock()
+	localhost = c.local
+	c.Unlock()
+	dest, err := net.Dial("tcp", localhost)
+
 	if err != nil {
 		log.Printf("[client:localConnection] unable to open local connection: %s\n", err)
 		return
