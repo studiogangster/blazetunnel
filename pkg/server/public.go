@@ -80,7 +80,7 @@ func findHost(conn net.Conn, buf *bufio.Reader) (err error, Host string, buffer 
 
 		if strings.HasPrefix(message, hostPrefix) {
 
-			message = message[6:]
+			message = message[6 : len(message)-1]
 			Host = strings.Split(message, ":")[0]
 			log.Println("HOST Request ", Host)
 			err = nil
