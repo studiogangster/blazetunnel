@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"unicode/utf8"
 
 	"github.com/lucas-clemente/quic-go"
 )
@@ -78,6 +79,8 @@ func (hm *HostMap) Put(host string, ts *TunnelState) bool {
 func (hm *HostMap) Get(host string) (*TunnelState, bool) {
 	hm.mx.Lock()
 
+	runes, _ := utf8.DecodeRuneInString(host)
+	log.Println("debug", host, runes)
 	for tmp := range hm.hosts {
 		log.Println("get", host, "from", tmp)
 	}
