@@ -22,7 +22,7 @@ func (s *Server) initPublic() error {
 	cfg := generateTLSConfig()
 	log.Println("Allowed protos: ", cfg.NextProtos)
 	cfg.NextProtos = []string{"http/1.1", "acme-tls/1", "quic-echo-example"}
-	ln, err := net.Listen("tcp", ":443")
+	ln, err := net.Listen("tcp", ":80")
 	if err != nil {
 		return err
 	}

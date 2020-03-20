@@ -1,8 +1,7 @@
 {
   "name": "blazetunnel",
-  "version": "v1.0.2",
+  "version": "v1.0.3",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "go-npm install",
