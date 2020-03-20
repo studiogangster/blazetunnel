@@ -77,6 +77,7 @@ func (hm *HostMap) Put(host string, ts *TunnelState) bool {
 // Get is used to get the tunnel state for a given host configuration
 func (hm *HostMap) Get(host string) (*TunnelState, bool) {
 	hm.mx.Lock()
+	log.Println("get", host, "from", hm.hosts)
 	ts, ok := hm.hosts[host]
 	hm.mx.Unlock()
 	return ts, ok

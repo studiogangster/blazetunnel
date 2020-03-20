@@ -13,6 +13,13 @@ import (
 
 func main() {
 
+	data := "data13\n"
+
+	data = data[:len(data)-1]
+	_data := strings.Split(data, ":")[0]
+	log.Println(_data)
+	log.Println("__")
+
 	l, err := net.Listen("tcp4", ":4040")
 	if err != nil {
 		log.Println(err)
