@@ -98,7 +98,7 @@ func (c *Client) handleStream(stream quic.Stream) {
 	localhost := ""
 	c.RLock()
 	localhost = c.local
-	c.Unlock()
+	c.RUnlock()
 	dest, err := net.Dial("tcp", localhost)
 
 	if err != nil {
