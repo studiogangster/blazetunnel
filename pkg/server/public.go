@@ -82,7 +82,7 @@ func findHost(conn net.Conn, buf *bufio.Reader) (err error, Host string, buffer 
 
 			message = message[6:]
 			Host = strings.Split(message, ":")[0]
-			log.Println("HOST Request %s", Host)
+			log.Println("HOST Request ", Host)
 			err = nil
 			// Host header found in request header
 			break
