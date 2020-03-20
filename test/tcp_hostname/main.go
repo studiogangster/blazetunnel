@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"strings"
+	"unicode/utf8"
 
 	"acln.ro/zerocopy"
 )
@@ -15,6 +17,15 @@ func main() {
 
 	data := "data13\n"
 
+	fmt.Printf("foo\nbar")
+
+	_d, _ := utf8.DecodeRuneInString(data)
+	fmt.Printf("%#U sta", _d)
+	for i, w := 0, 0; i < len(data); i += w {
+		runeValue, width := utf8.DecodeRuneInString(data[i:])
+		fmt.Printf("%#U starts at byte position %d\n", runeValue, i)
+		w = width
+	}
 	data = data[:len(data)-1]
 	_data := strings.Split(data, ":")[0]
 	log.Println(_data)
