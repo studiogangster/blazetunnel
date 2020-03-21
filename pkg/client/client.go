@@ -112,7 +112,9 @@ func (c *Client) Start() error {
 	// Create a new context, with its cancellation function
 	// from the original context
 
-	go c.handleCtlStream(ctlStream, cancel)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go c.handleCtlStream(ctlStream, cancel, &wg)
 	// i := 0
 	for {
 
@@ -122,17 +124,19 @@ func (c *Client) Start() error {
 			break
 
 		}
-
-		go c.handleStream(common.NewCompressedStream(stream), ctx)
+		wg.Add(1)
+		go c.handleStream(ctx, common.NewCompressedStream(stream), &wg)
 	}
 
 	log.Println("Waiting for all goroutines to finish that were started via control stream")
+	defer wg.Wait()
 	return errors.New("[DEBUG]:" + "Clodes complete quic session and clearing left over garbage")
 
 }
 
-func (c *Client) handleStream(stream quic.Stream, ctx context.Context) {
+func (c *Client) handleStream(ctx context.Context, stream quic.Stream, _wg *sync.WaitGroup) {
 
+	defer _wg.Done()
 	log.Println("[DEBUG]", "handleStream(")
 	defer func() {
 		log.Println("[DEBUG]", "~handleStream()")
@@ -159,8 +163,10 @@ func (c *Client) handleStream(stream quic.Stream, ctx context.Context) {
 
 	completion := make(chan struct{})
 
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
-
+		wg.Done()
 		log.Println("[DEBUG]", "contextobserver()")
 
 		defer func() {
@@ -171,8 +177,7 @@ func (c *Client) handleStream(stream quic.Stream, ctx context.Context) {
 			log.Println("[DEBUG]", "contextobserver('CONTEXT_DONE')")
 
 			dest.Close()
-			stream.CancelRead(2)
-			stream.CancelWrite(2)
+			stream.Close()
 
 			break
 		case <-completion:
@@ -181,6 +186,8 @@ func (c *Client) handleStream(stream quic.Stream, ctx context.Context) {
 
 		}
 	}()
+
+	defer wg.Wait()
 
 	go zerocopy.Transfer(dest, stream)
 	if _, err := zerocopy.Transfer(stream, dest); err != nil {
@@ -191,7 +198,9 @@ func (c *Client) handleStream(stream quic.Stream, ctx context.Context) {
 	close(completion)
 }
 
-func (c *Client) handleCtlStream(ctlStream quic.Stream, cancel context.CancelFunc) {
+func (c *Client) handleCtlStream(ctlStream quic.Stream, cancel context.CancelFunc, wg *sync.WaitGroup) {
+
+	defer wg.Done()
 
 	log.Println("Starting handleCtlStream")
 	defer func() {
@@ -211,7 +220,7 @@ func (c *Client) handleCtlStream(ctlStream quic.Stream, cancel context.CancelFun
 		// default:
 		// log.Println("PingPong Timeout", "Closing Connection")
 		// <-time.After(5 * time.Second)
-		log.Println("Reading time")
+
 		ctlStream.SetReadDeadline(time.Now().Add(time.Second * 5))
 		m, err := newmsg("", "").DecodeFrom(ctlStream)
 
@@ -229,7 +238,7 @@ func (c *Client) handleCtlStream(ctlStream quic.Stream, cancel context.CancelFun
 			log.Printf("[client:message] Got pong from %s\n", c.tunnel)
 			<-time.After(3 * time.Second)
 			ctlStream.SetWriteDeadline(time.Now().Add(time.Second * 5))
-			log.Println("Writting time")
+
 			err = newmsg(common.CommandPingPeer, "").EncodeTo(ctlStream)
 
 			if err != nil {
