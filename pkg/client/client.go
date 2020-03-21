@@ -4,6 +4,7 @@ import (
 	"blazetunnel/common"
 	"context"
 	"crypto/tls"
+	"errors"
 	"log"
 	"net"
 	"sync"
@@ -38,60 +39,107 @@ func NewClient(tunnel, local string, idleTimeout uint, token string) *Client {
 // Start starts the peer connection to the tunnel server
 func (c *Client) Start() error {
 
-	// c.tunnel = "server:2723"
+	log.Println("[DEBUG]", "Starting", "Start()")
 
-	log.Println(c.tunnel)
+	defer func() {
+		log.Println("[DEBUG]", "Closing", "Start()")
+
+	}()
+
 	tlsConf := &tls.Config{
 		InsecureSkipVerify: true,
 		NextProtos:         []string{"quic-echo-example"},
 	}
-	session, err := quic.DialAddr(c.tunnel, tlsConf, &quic.Config{
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	defer cancel()
+
+	session, err := quic.DialAddrContext(ctx, c.tunnel, tlsConf, &quic.Config{
 		IdleTimeout: time.Second * time.Duration(c.idleTimeout),
 	})
-	if err != nil {
-		return err
-	}
-	defer session.Close()
 
-	ctlStream, err := session.OpenStreamSync(context.Background())
 	if err != nil {
 		return err
 	}
-	defer ctlStream.Close()
+
+	defer func() {
+		log.Println("Defer", "session.close()")
+		// session.ConnectionState()
+		if ctx.Err() == nil {
+
+			log.Println("[DEBUG]", "Session not closed yet", "Attempt to close")
+			session.Close()
+			log.Println("[DEBUG]", "Session Closed")
+		} else {
+			log.Println("[DEBUG]", "Session already closed")
+		}
+
+	}()
+
+	ctlStream, err := session.OpenStreamSync(ctx)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		log.Println("[DEBUG]", "Attempt to close controlStream")
+
+		if ctx.Err() == nil {
+
+			log.Println("[DEBUG]", "controlStream not closed yet", "Attempt to close")
+			ctlStream.Close()
+			log.Println("[DEBUG]", "controlStream Closed")
+		} else {
+			log.Println("[DEBUG]", "controlStream already closed")
+		}
+		ctlStream.Close()
+	}()
 
 	err = newmsg(common.CommandNewClient, c.token).EncodeTo(ctlStream)
 	if err != nil {
 		return err
 	}
 
-	log.Println("Opened stream")
 	m, err := newmsg("", "").DecodeFrom(ctlStream)
 	if err != nil {
 		return err
 	}
 
-	log.Println("Read msgpack message")
-
 	log.Printf("Message received: %s(%s)\n", m.Command, m.Context)
-	log.Println("accepting connection")
-	go c.handleCtlStream(ctlStream)
-	i := 0
+
+	// ctx := context.Background()
+	// Create a new context, with its cancellation function
+	// from the original context
+
+	go c.handleCtlStream(ctlStream, cancel)
+	// i := 0
 	for {
-		stream, err := session.AcceptStream(context.Background())
+
+		stream, err := session.AcceptStream(ctx)
 		if err != nil {
 			log.Printf("[client:tunnelConnection] unable to open a stream: %s\n", err)
-			return err
+			break
+
 		}
-		i++
-		log.Println("opened stream: ", i)
-		go c.handleStream(common.NewCompressedStream(stream))
+
+		go c.handleStream(common.NewCompressedStream(stream), ctx)
 	}
+
+	log.Println("Waiting for all goroutines to finish that were started via control stream")
+	return errors.New("[DEBUG]:" + "Clodes complete quic session and clearing left over garbage")
 
 }
 
-func (c *Client) handleStream(stream quic.Stream) {
+func (c *Client) handleStream(stream quic.Stream, ctx context.Context) {
+
+	log.Println("[DEBUG]", "handleStream(")
 	defer func() {
-		log.Println("Closing")
+		log.Println("[DEBUG]", "~handleStream()")
+	}()
+
+	defer func() {
+
 		stream.Close()
 	}()
 
@@ -107,41 +155,98 @@ func (c *Client) handleStream(stream quic.Stream) {
 	}
 	defer dest.Close()
 
+	// Listen for context closure, and close the goroutine
+
+	completion := make(chan struct{})
+
+	go func() {
+
+		log.Println("[DEBUG]", "contextobserver()")
+
+		defer func() {
+			log.Println("[DEBUG]", "~contextobserver()")
+		}()
+		select {
+		case <-ctx.Done():
+			log.Println("[DEBUG]", "contextobserver('CONTEXT_DONE')")
+
+			dest.Close()
+			stream.CancelRead(2)
+			stream.CancelWrite(2)
+
+			break
+		case <-completion:
+			log.Println("[DEBUG]", "contextobserver('COMPLETION')")
+			return
+
+		}
+	}()
+
 	go zerocopy.Transfer(dest, stream)
 	if _, err := zerocopy.Transfer(stream, dest); err != nil {
 		log.Printf("[client:localConnection] unable to open local connection: %s\n", err)
-		return
+
 	}
+
+	close(completion)
 }
 
-func (c *Client) handleCtlStream(ctlStream quic.Stream) {
+func (c *Client) handleCtlStream(ctlStream quic.Stream, cancel context.CancelFunc) {
+
+	log.Println("Starting handleCtlStream")
+	defer func() {
+		log.Println("Closing handleCtlStream")
+	}()
+
+	ctlStream.SetReadDeadline(time.Now().Add(time.Second * 5))
 	err := newmsg(common.CommandPingPeer, "").EncodeTo(ctlStream)
 	if err != nil {
 		log.Printf("[server:pong] unable to decode from msgpack: %s\n", err)
+		cancel()
 		return
 	}
+	ctlStream.SetReadDeadline(time.Time{})
 
-	getOut := false
-	for !getOut {
+	for {
+		// default:
+		// log.Println("PingPong Timeout", "Closing Connection")
+		// <-time.After(5 * time.Second)
+		log.Println("Reading time")
 		ctlStream.SetReadDeadline(time.Now().Add(time.Second * 5))
-
 		m, err := newmsg("", "").DecodeFrom(ctlStream)
+
 		if err != nil {
-			log.Printf("[client:ping] unable to decode from msgpack: %s\n", err)
+			// Coudn't read message from control stream | Probably due to timeout | Close the session and reinitiate
+			log.Println("Error reading timeout")
+			cancel()
 			return
 		}
-		<-time.After(3 * time.Second)
+		ctlStream.SetReadDeadline(time.Time{})
+
+		// Check which operation was message about
 		switch m.Command {
 		case common.CommandPongPeer:
 			log.Printf("[client:message] Got pong from %s\n", c.tunnel)
+			<-time.After(3 * time.Second)
+			ctlStream.SetWriteDeadline(time.Now().Add(time.Second * 5))
+			log.Println("Writting time")
 			err = newmsg(common.CommandPingPeer, "").EncodeTo(ctlStream)
+
 			if err != nil {
 				log.Printf("[client:ping] unable to encode to msgpack: %s\n", err)
-				getOut = true
-				break
+				cancel()
+				return
+
 			}
+			ctlStream.SetWriteDeadline(time.Time{})
+			break
+
+		default:
+			log.Println("[client:message] Unknwon type of message recieved")
+			break
 
 		}
 
 	}
+
 }

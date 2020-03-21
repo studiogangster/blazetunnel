@@ -44,6 +44,7 @@ func Init() *cli.Command {
 }
 
 func createClient(ctx *cli.Context) error {
+
 	tunnel := ctx.String("tunnel")
 	if tunnel == "" {
 		return errors.New("Tunnel address cannot be empty")
