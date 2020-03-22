@@ -57,7 +57,6 @@ func createSelfConnectingClient(ctx *cli.Context) error {
 
 	}
 
-	return nil
 }
 
 func createClient(ctx *cli.Context) error {
