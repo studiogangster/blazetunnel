@@ -9,6 +9,8 @@ import (
 	"github.com/lucas-clemente/quic-go"
 )
 
+const handshakeTimeout = 5
+
 var newmsg = common.NewMessage
 
 func (s *Server) initTunnel() error {
@@ -56,7 +58,9 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		session.Close()
 	}
 
+	ctlStream.SetReadDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
 	m, err := newmsg("", "").DecodeFrom(ctlStream)
+	ctlStream.SetDeadline(time.Time{})
 	if err != nil {
 		log.Printf("[server:tunnelListener] unable to decode msgpack: %s\n", err)
 		close()
@@ -64,9 +68,13 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 	}
 	if m.Command == common.CommandAuthClient {
 		log.Printf("[server:tunnelListener] Authenticating: %s %s\n", m.Command, m.Context)
+
+		ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
 		err := newmsg(common.CommandAuthServer, m.Context).EnryptTo(ctlStream)
+		ctlStream.SetWriteDeadline(time.Time{})
+
 		log.Println("Error", err)
-		// close()
+		close()
 		return
 	}
 
@@ -83,14 +91,19 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 
 	if err != nil {
 		close()
-		log.Println("Authenticated successfully", m.Context)
+		log.Println("Authenticated failed", m.Context)
 		return
 	}
 
 	serviceName := m.Context
 
 	exposedDomain := serviceName + "." + s.domain
+
+	ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
+
 	err = newmsg(common.CommandSetConfig, exposedDomain).EncodeTo(ctlStream)
+	ctlStream.SetWriteDeadline(time.Time{})
+
 	if err != nil {
 		log.Printf("[server:tunnelListener] unable to encode to msgpack: %s\n", err)
 		close()
