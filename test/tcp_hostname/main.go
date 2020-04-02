@@ -1,115 +1,33 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
-	"errors"
-	"fmt"
+	"blazetunnel/db"
 	"log"
-	"net"
-	"strings"
-	"unicode/utf8"
-
-	"acln.ro/zerocopy"
 )
 
 func main() {
 
-	data := "data13\n"
+	err := (&db.App{
+		Appname:  "dasdssa",
+		Password: "",
+	}).CreateApp()
 
-	fmt.Printf("foo\nbar")
+	log.Println("Createapp", err)
 
-	_d, _ := utf8.DecodeRuneInString(data)
-	fmt.Printf("%#U sta", _d)
-	for i, w := 0, 0; i < len(data); i += w {
-		runeValue, width := utf8.DecodeRuneInString(data[i:])
-		fmt.Printf("%#U starts at byte position %d\n", runeValue, i)
-		w = width
-	}
-	data = data[:len(data)-1]
-	_data := strings.Split(data, ":")[0]
-	log.Println(_data)
-	log.Println("__")
+	ans := (&db.App{
+		Appname:  "dasdsa",
+		Password: "Dsads",
+	}).Authenticate()
 
-	l, err := net.Listen("tcp4", ":4040")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer l.Close()
+	log.Println(ans)
 
-	for {
-		c, err := l.Accept()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		go handle(c)
-	}
-}
+	(&db.App{
+		Appname: "dasdsa",
+	}).CreateApp()
+	ans = (&db.App{
+		Appname: "dasdsa",
+	}).Authenticate()
 
-func handle(conn net.Conn) {
-	conn.Write([]byte("starting rtesponse"))
+	log.Println(ans)
 
-	err, host, headerStream := findHost(conn)
-
-	conn.Write([]byte("starting rtesponse"))
-
-	go zerocopy.Transfer(conn, conn)
-	// conn.Write(buffer.Bytes())
-	if err != nil {
-		conn.Close()
-		log.Println("Error:", err)
-	} else {
-		log.Println("Host:", host)
-
-		requestHeader := headerStream.Bytes()
-		conn.Write(requestHeader)
-		// log.Println(string(srequestHeader))
-	}
-}
-
-func findHost(conn net.Conn) (err error, Host string, buffer bytes.Buffer) {
-
-	err = errors.New("Host header not found")
-
-	var buf = bufio.NewReader(conn)
-
-	Host = ""
-
-	CRLF := "\r\n"
-
-	for {
-		// will listen for message to process ending in newline (\n)
-
-		var message string
-		message, err = buf.ReadString('\n')
-
-		if err != nil {
-			log.Println("Error", err)
-			buffer.Reset()
-			return
-		}
-
-		// Copy message to header
-		buffer.Write([]byte(message))
-
-		if message == CRLF {
-			log.Println("End")
-			// buffer.Write([]byte(CRLF))
-			// Request Headers ended
-			return
-		}
-
-		if strings.HasPrefix(message, "Host:") {
-			Host = message
-			err = nil
-			// Host header found in request header
-			break
-
-		}
-
-	}
-
-	return
 }

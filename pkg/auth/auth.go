@@ -4,6 +4,7 @@ import (
 	"blazetunnel/common"
 	"context"
 	"crypto/tls"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -55,7 +56,9 @@ func (a *Auth) Start() error {
 	}
 	defer ctlStream.Close()
 
-	err = newmsg(common.CommandAuthClient, a.service).EncodeTo(ctlStream)
+	authenticationCredemtials := a.username + ":" + a.password + ":" + a.service
+
+	err = newmsg(common.CommandAuthClient, authenticationCredemtials).EncodeTo(ctlStream)
 	if err != nil {
 		return err
 	}
@@ -74,23 +77,32 @@ func (a *Auth) Start() error {
 
 }
 
-func saveToken(authtoken string, auth Auth) {
+func saveToken(authtoken string, auth Auth) error {
+
+	if authtoken == "" {
+
+		return errors.New("Invalid Credentials")
+
+	}
+
 	f, err := os.Create(".blazetoken")
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
 	_, err = f.WriteString(authtoken)
 	if err != nil {
 		fmt.Println(err)
 		f.Close()
-		return
+		return err
 	}
 	fmt.Println("Authtoken saved in .blazetoken")
 	fmt.Printf("Use:\n\tgo run main.go client --tunnel %s --local localhost:%d\n\tto connect to the internet\n", auth.server, auth.port)
 	err = f.Close()
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
+
+	return nil
 }
