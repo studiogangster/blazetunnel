@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	acln.ro/zerocopy v0.0.0-20190410132315-ac749309e897
+	github.com/boltdb/bolt v1.3.1
 	github.com/gizak/termui/v3 v3.1.0
 	github.com/golang/snappy v0.0.1
 	github.com/hako/branca v0.0.0-20191227164554-3b9970524189
@@ -15,6 +16,7 @@ require (
 	github.com/miekg/dns v1.1.25 // indirect
 	github.com/urfave/cli/v2 v2.1.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
+	go.mongodb.org/mongo-driver v1.3.1
 	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073 // indirect
 	golang.org/x/net v0.0.0-20191126235420-ef20fe5d7933 // indirect
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect

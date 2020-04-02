@@ -1,8 +1,11 @@
 package common
 
 import (
+	"blazetunnel/db"
+	"errors"
 	"io"
 	"log"
+	"strings"
 
 	"github.com/hako/branca"
 	"github.com/vmihailenco/msgpack"
@@ -54,7 +57,31 @@ func (m *Message) Authenticate() error {
 		return err
 	}
 
-	m.Context = message
+	credentials := strings.Split(message, ":")
+
+	service := ""
+
+	if len(credentials) == 3 {
+
+		authenticated := (&db.App{
+			Appname:  credentials[0],
+			Password: credentials[1],
+		}).Authenticate()
+
+		if authenticated {
+			service = credentials[2]
+		} else {
+			service = ""
+			return errors.New("Invalid Credentials")
+
+		}
+
+	} else {
+		service = ""
+		return errors.New("Invalid Credentials")
+	}
+
+	m.Context = service
 	return nil
 }
 

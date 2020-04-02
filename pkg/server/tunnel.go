@@ -2,8 +2,10 @@ package server
 
 import (
 	"blazetunnel/common"
+	"blazetunnel/db"
 	"context"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/lucas-clemente/quic-go"
@@ -66,11 +68,65 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		close()
 		return
 	}
+
+	// Check if registration request
+	if m.Command == common.CommandRegisterClient {
+		log.Printf("[server:tunnelListener] Registring: %s %s\n", m.Command, m.Context)
+
+		credentials := strings.Split(m.Context, ":")
+
+		responseMessage := ""
+
+		if len(credentials) == 2 {
+
+			err := (&db.App{
+				Appname:  credentials[0],
+				Password: credentials[1],
+			}).CreateApp()
+
+			if err != nil {
+				responseMessage = err.Error()
+			} else {
+				responseMessage = "Registration Successfull"
+			}
+
+		} else {
+			responseMessage = "Invalid  data recieved for registration"
+		}
+
+		ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
+		newmsg(common.CommandRegisterServer, responseMessage).EnryptTo(ctlStream)
+		ctlStream.SetWriteDeadline(time.Time{})
+		close()
+		return
+	}
+	// Check if authentication request
 	if m.Command == common.CommandAuthClient {
 		log.Printf("[server:tunnelListener] Authenticating: %s %s\n", m.Command, m.Context)
 
+		credentials := strings.Split(m.Context, ":")
+
+		responseMessage := ""
+
+		if len(credentials) == 3 {
+
+			authenticated := (&db.App{
+				Appname:  credentials[0],
+				Password: credentials[1],
+			}).Authenticate()
+
+			if authenticated {
+				responseMessage = credentials[0] + ":" + credentials[1] + ":" + credentials[1]
+			} else {
+				responseMessage = ""
+			}
+
+		} else {
+			responseMessage = ""
+		}
+
 		ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
-		err := newmsg(common.CommandAuthServer, m.Context).EnryptTo(ctlStream)
+		err := newmsg(common.CommandAuthServer, responseMessage).EnryptTo(ctlStream)
 		ctlStream.SetWriteDeadline(time.Time{})
 
 		log.Println("Error", err)

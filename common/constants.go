@@ -11,6 +11,9 @@ const (
 	CommandPongPeer   = "pong:peer"
 	CommandAuthServer = "new:authserver"
 	CommandAuthClient = "new:authclient"
+
+	CommandRegisterClient = "new:regserver"
+	CommandRegisterServer = "new:regclient"
 )
 
 // Secretkey: To be used for encryption
