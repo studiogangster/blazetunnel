@@ -85,7 +85,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 			}).CreateApp()
 
 			if err != nil {
-				log.Println("Registration Error")
+				log.Println("Registration Error", err)
 				responseMessage = err.Error()
 			} else {
 				responseMessage = "Registration Successfull"
