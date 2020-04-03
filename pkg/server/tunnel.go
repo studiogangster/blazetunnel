@@ -97,7 +97,8 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 
 		ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
 		log.Println("Regisration status", responseMessage)
-		newmsg(common.CommandRegisterServer, responseMessage).EncodeTo(ctlStream)
+		err := newmsg(common.CommandRegisterServer, responseMessage).EncodeTo(ctlStream)
+		log.Println("Regisration err", err)
 		ctlStream.SetWriteDeadline(time.Time{})
 		close()
 		return

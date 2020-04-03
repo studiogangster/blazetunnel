@@ -58,20 +58,24 @@ func (a *App) Start() error {
 
 	registerCredentials := a.appname + ":" + a.password
 
+	ctlStream.SetWriteDeadline(time.Now().Add(time.Second * 5))
 	err = newmsg(common.CommandRegisterClient, registerCredentials).EncodeTo(ctlStream)
 	if err != nil {
 		return err
 	}
+	ctlStream.SetWriteDeadline(time.Time{})
 
 	fmt.Println("Registering with blazerecon server")
 	ctlStream.SetReadDeadline(time.Now().Add(time.Second * 5))
 
 	m, err := newmsg("", "").DecodeFrom(ctlStream)
+	ctlStream.SetReadDeadline(time.Time{})
 	if err != nil {
+		log.Println("Registraion Error:", err)
 		return err
 	}
 
-	log.Println(m.Context)
+	log.Println("Registraion Status:", m.Context)
 	return nil
 
 }
