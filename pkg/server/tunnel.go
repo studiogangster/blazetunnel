@@ -120,7 +120,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 			}).Authenticate()
 
 			if authenticated {
-				responseMessage = credentials[0] + ":" + credentials[1] + ":" + credentials[1]
+				responseMessage = credentials[0] + ":" + credentials[1] + ":" + credentials[2]
 			} else {
 				responseMessage = ""
 			}
