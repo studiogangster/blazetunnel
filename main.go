@@ -3,6 +3,8 @@ package main
 import (
 	"blazetunnel/pkg/auth"
 	"blazetunnel/pkg/client"
+	"blazetunnel/pkg/register"
+
 	"blazetunnel/pkg/server"
 	"log"
 	"os"
@@ -22,6 +24,7 @@ func main() {
 			server.Init(),
 			client.Init(),
 			auth.Init(),
+			register.Init(),
 		},
 	}
 
