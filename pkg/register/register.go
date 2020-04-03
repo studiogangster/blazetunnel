@@ -71,7 +71,7 @@ func (a *App) Start() error {
 	m, err := newmsg("", "").DecodeFrom(ctlStream)
 	ctlStream.SetReadDeadline(time.Time{})
 	if err != nil {
-		log.Println("Registraion Error:", err)
+		log.Println("Registraion Error:", err, m.Command, m.Context)
 		return err
 	}
 
