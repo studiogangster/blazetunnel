@@ -134,7 +134,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		if responseMessage == "" {
 			err = newmsg(common.CommandAuthServer, responseMessage).EncodeTo(ctlStream)
 		} else {
-			err := newmsg(common.CommandAuthServer, responseMessage).EnryptTo(ctlStream)
+			err = newmsg(common.CommandAuthServer, responseMessage).EnryptTo(ctlStream)
 		}
 		ctlStream.SetWriteDeadline(time.Time{})
 
