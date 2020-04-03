@@ -8,8 +8,14 @@ import (
 func main() {
 
 	err := (&db.App{
-		Appname:  "dasdssa",
-		Password: "",
+		Appname:  "dsadas",
+		Password: "dasd",
+	}).CreateApp()
+
+	log.Println("Createapp", err)
+	err = (&db.App{
+		Appname:  "dsadas",
+		Password: "dasddsada",
 	}).CreateApp()
 
 	log.Println("Createapp", err)

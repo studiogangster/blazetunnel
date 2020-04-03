@@ -38,7 +38,7 @@ func Init() *cli.Command {
 				Aliases:     []string{"s"},
 				DefaultText: "Secret Key",
 				Usage:       "Secret key to be used for encryption",
-				Value:       "01234567890123456789012345678912",
+				Value:       "supersecretkeyyoushouldnotcommit",
 			},
 		},
 	})

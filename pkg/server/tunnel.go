@@ -85,6 +85,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 			}).CreateApp()
 
 			if err != nil {
+				log.Println("Registration Error")
 				responseMessage = err.Error()
 			} else {
 				responseMessage = "Registration Successfull"
@@ -95,7 +96,8 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		}
 
 		ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
-		newmsg(common.CommandRegisterServer, responseMessage).EnryptTo(ctlStream)
+		log.Println("Regisration status", responseMessage)
+		newmsg(common.CommandRegisterServer, responseMessage).EncodeTo(ctlStream)
 		ctlStream.SetWriteDeadline(time.Time{})
 		close()
 		return
@@ -147,7 +149,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 
 	if err != nil {
 		close()
-		log.Println("Authenticated failed", m.Context)
+		log.Println("Authenticated failed", m.Context, err)
 		return
 	}
 

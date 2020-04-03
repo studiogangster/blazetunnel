@@ -71,9 +71,7 @@ func (a *Auth) Start() error {
 		return err
 	}
 
-	saveToken(m.Context, *a)
-
-	return nil
+	return saveToken(m.Context, *a)
 
 }
 
