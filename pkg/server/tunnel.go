@@ -100,6 +100,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		err := newmsg(common.CommandRegisterServer, responseMessage).EncodeTo(ctlStream)
 		log.Println("Regisration err", err)
 		ctlStream.SetWriteDeadline(time.Time{})
+		// TODO: Introduce a sleep timeout to confirm delivery of message, and close the connection from client after recieving message
 		close()
 		return
 	}
@@ -129,7 +130,12 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		}
 
 		ctlStream.SetWriteDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
-		err := newmsg(common.CommandAuthServer, responseMessage).EnryptTo(ctlStream)
+		var err error
+		if responseMessage == "" {
+			err = newmsg(common.CommandAuthServer, responseMessage).EncodeTo(ctlStream)
+		} else {
+			err := newmsg(common.CommandAuthServer, responseMessage).EnryptTo(ctlStream)
+		}
 		ctlStream.SetWriteDeadline(time.Time{})
 
 		log.Println("Error", err)

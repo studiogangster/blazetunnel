@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/urfave/cli/v2"
 )
@@ -20,6 +21,14 @@ func Init() *cli.Command {
 				Aliases:  []string{"s"},
 				Usage:    "Auth server's address",
 				Required: true,
+			},
+
+			&cli.Int64Flag{
+				Name:     "serverport",
+				Aliases:  []string{"sp"},
+				Usage:    "Auth server's port",
+				Required: false,
+				Value:    2723,
 			},
 			&cli.StringFlag{
 				Name:     "username",
@@ -56,6 +65,11 @@ func createAuth(ctx *cli.Context) error {
 		return errors.New("server cannot be empty")
 	}
 
+	serverport := ctx.Int("serverport")
+	if serverport == 0 {
+		return errors.New("Invalid auth server port")
+	}
+
 	username := ctx.String("username")
 	if username == "" {
 		return errors.New("username cannot be empty")
@@ -76,5 +90,6 @@ func createAuth(ctx *cli.Context) error {
 		return errors.New("Port cannot be empty")
 	}
 
+	server = server + ":" + strconv.Itoa(serverport)
 	return NewAuth(username, password, server, service, port).Start()
 }
