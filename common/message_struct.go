@@ -70,7 +70,13 @@ func (m *Message) Authenticate() error {
 		}).Authenticate()
 
 		if authenticated {
-			service = credentials[2]
+
+			if credentials[2] == "" {
+				service = credentials[0]
+			} else {
+				service = credentials[0] + "." + credentials[2]
+			}
+
 		} else {
 			service = ""
 			return errors.New("Invalid Credentials")

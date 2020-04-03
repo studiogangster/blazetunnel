@@ -46,7 +46,8 @@ func Init() *cli.Command {
 				Name:     "service",
 				Aliases:  []string{"S"},
 				Usage:    "Service name",
-				Required: true,
+				Value:    "",
+				Required: false,
 			},
 
 			&cli.Int64Flag{
@@ -82,7 +83,7 @@ func createAuth(ctx *cli.Context) error {
 
 	service := ctx.String("service")
 	if service == "" {
-		return errors.New("service cannot be empty")
+		// return errors.New("service cannot be empty")
 	}
 
 	port := ctx.Int64("port")

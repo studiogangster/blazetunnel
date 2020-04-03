@@ -77,12 +77,6 @@ func (a *Auth) Start() error {
 
 func saveToken(authtoken string, auth Auth) error {
 
-	if authtoken == "" {
-
-		return errors.New("Invalid Credentials")
-
-	}
-
 	f, err := os.Create(".blazetoken")
 	if err != nil {
 		fmt.Println(err)
@@ -94,7 +88,7 @@ func saveToken(authtoken string, auth Auth) error {
 		f.Close()
 		return err
 	}
-	fmt.Println("Authtoken saved in .blazetoken")
+	fmt.Println("Authtoken saved in .blazetoken", authtoken)
 	fmt.Printf("Use:\n\tgo run main.go client --tunnel %s --local localhost:%d\n\tto connect to the internet\n", auth.server, auth.port)
 	err = f.Close()
 	if err != nil {
@@ -102,5 +96,10 @@ func saveToken(authtoken string, auth Auth) error {
 		return err
 	}
 
+	if authtoken == "" {
+
+		return errors.New("Invalid Credentials")
+
+	}
 	return nil
 }
