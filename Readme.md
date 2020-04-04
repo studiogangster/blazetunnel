@@ -3,7 +3,7 @@
 Blazetunnel creates a secured tunnel(s) between your local machine(s) & a dedicated server.
 This tunnel can be used expose your local service to the public on the internet.
    
-######   Status
+### Status
 Currently in in beta stage. 
 
 ### Problems:
