@@ -74,7 +74,7 @@ func (m *Message) Authenticate() error {
 			if credentials[2] == "" {
 				service = credentials[0]
 			} else {
-				service = credentials[0] + "." + credentials[2]
+				service = credentials[2] + "." + credentials[0]
 			}
 
 		} else {

@@ -20,6 +20,13 @@ func Init() *cli.Command {
 			Usage:    "Remote public tunnel address to connect to",
 			Required: true,
 		},
+
+		&cli.Int64Flag{
+			Name:     "tunnelport",
+			Usage:    "Remote public tunnel's port",
+			Required: false,
+			Value:    2723,
+		},
 		&cli.StringFlag{
 			Name:     "local",
 			Usage:    "Local TCP server to proxy the connections to",
@@ -71,10 +78,14 @@ func createClient(ctx *cli.Context) error {
 		return errors.New("Local address cannot be empty")
 	}
 
+	tunnelport := ctx.String("tunnelport")
+
 	token := ctx.String("token")
 	if token == "" {
 		return errors.New("Token can not be empty")
 	}
+
+	tunnel = tunnel + ":" + tunnelport
 
 	return NewClient(tunnel, local, ctx.Uint("i"), token).Start()
 }
