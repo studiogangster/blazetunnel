@@ -16,7 +16,7 @@ func main() {
 
 	app := &cli.App{
 		Name:                 "blazetunnel",
-		Version:              "1.0.5",
+		Version:              "1.0.6",
 		Usage:                "Expose your local application / docker container to the internet",
 		EnableBashCompletion: true,
 
