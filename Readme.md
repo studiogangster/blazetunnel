@@ -8,36 +8,36 @@ Currently in in beta stage.
 
 ### Problems:
 
-NAT restrictions imposed by your ISP
-Double NAT imposed by your ISP
-No option to upgrade to Static IP
-Demanding a premium fee to get a static IP
+1. NAT restrictions imposed by your ISP
+2. Double NAT imposed by your ISP
+3. No option to upgrade to Static IP
+4. Demanding a premium fee to get a static IP
 
 ### Use-cases:
 
-Collaborative development & testing
-Showcase your portfolio to the client
-You own a high-end machine, and want to utilise it's CPU , GPU remotely (Video Rendering, ML, AI, etc.)
-Dont't want to pay for expesive spec server, and create your own cloud
-Bypass firewall rules (imposed by ISP, organization, etc.) to expose your webservice
-Create your own on-the-go-lab
-Have your own intranet available on the internet
+1. Collaborative development & testing
+2. Showcase your portfolio to the client
+3. You own a high-end machine, and want to utilise it's CPU , GPU remotely (Video Rendering, ML, AI, etc.)
+4. Dont't want to pay for expesive spec server, and create your own cloud
+5. Bypass firewall rules (imposed by ISP, organization, etc.) to expose your webservice
+6. Create your own on-the-go-lab
+7. Have your own intranet available on the internet
 
 ### Why Blazetunnel:
 
-Seamsless to create & deploy new apps on the go. 
-Side-car for your docker container to directly expose the service on the internet
-Registration, authentication, & end-to-end encryption
-Blazetunnel uses UDP rather than TCP for tunneling (QUIC). 
+1. Seamsless to create & deploy new apps on the go. 
+2. Side-car for your docker container to directly expose the service on the internet
+3. Registration, authentication, & end-to-end encryption
+4. Blazetunnel uses UDP rather than TCP for tunneling (QUIC). 
 So, it can bypass TCP firewall restrictions, is fast, scalable, supports multiplexing, & no head-of-line blocking.
-Assembled with nginx, & cert-bot to make it easy to deploy standalone server, with TLS, and be scale ready
-Custom error-page in case the exposed service is down
-Written in GoLang (Faster,) 
-*Uses zero-copy syscall (Faster & less cpu-cycles) if possible.
-Low latency ( Thanks to UDP & QUIC )
-Multiplexing allows to serve parallel requests coming to the same service.
-Built-in SSL Plugin (certbot)
-End-to-end security
+5. Assembled with nginx, & cert-bot to make it easy to deploy standalone server, with TLS, and be scale ready
+6. Custom error-page in case the exposed service is down
+7. Written in GoLang (Faster,) 
+8. Uses zero-copy syscall (Faster & less cpu-cycles) *if possible*.
+9. Low latency ( Thanks to UDP & QUIC )
+10. Multiplexing allows to serve parallel requests coming to the same service.
+11. Built-in SSL Plugin (certbot)
+12. End-to-end security
 
 ### Installation:
 
