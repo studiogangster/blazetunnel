@@ -4,7 +4,7 @@ Blazetunnel creates a secured tunnel(s) between your local machine(s) & a dedica
 This tunnel can be used expose your local service to the public on the internet.
    
 ### Status
-Currently in in beta stage. 
+Blazetunnel is production ready. 
 
 ### Problems:
 
