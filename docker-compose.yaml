@@ -30,7 +30,7 @@ services:
             # - .env
         environment: 
             # -  token=n87vve5uYvzzMi6kib01YE8SiDg0pMbmTTc94WCUkCVrPRo4gy06UsfuxnNOmTBVn0qLCZeZQ4FWmFP4vuaRuXIHTH
-            -  token=3GrYlCVxhGvrNPx0CBT720bSYqwFpKjCRih0c1ggeK6wl0ZnKpjlbmRES9RAGhWw1y8nOePs3ib3ccnJWuqvbYBpDaUm
+            -  token=3GrYlT2IOCJOLry03hCYUaoyLNR7VtoPRLIpejqDiUTacUULp2Ej8xaUCtaZEpHdUgLtLVidTumHpS3Cm8bcWa8PGgmO
             -  tunnel=blazetunnel.meddler.xyz
         command: ./blazetunnel client --local mockserver:8000 -i 3600
         working_dir: /go/src/github.com/rounak316/blazetunnel
@@ -178,7 +178,7 @@ services:
             - ./nginx/data/certbot/conf:/etc/letsencrypt
             - ./nginx/data/certbot/www:/var/www/certbot
         depends_on:
-            - blazeserver
+            - server_dev
         ports:
             - "80:80"
             - "443:443"
