@@ -3,7 +3,7 @@ version: "3"
 
 services:
 
-    server_dev:
+    blazeserver:
         image: golang
         volumes:
         - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
@@ -155,18 +155,18 @@ services:
         expose:
             - 8000
 
-    blazeserver:
-        build: https://github.com/rounak316/blazetunnel.git
-        container_name: blazeserver
-        env_file:
-            - .env
-        command: server --domain ${DOMAIN_NAME} -i 3600
-        expose:
-            - 443
-            - 80
+    # blazeserver:
+    #     build: https://github.com/rounak316/blazetunnel.git
+    #     container_name: blazeserver
+    #     env_file:
+    #         - .env
+    #     command: server --domain ${DOMAIN_NAME} -i 3600
+    #     expose:
+    #         - 443
+    #         - 80
 
-        ports:
-            - 2723:2723/udp
+    #     ports:
+    #         - 2723:2723/udp
 
     nginx:
         image: nginx:1.15-alpine
