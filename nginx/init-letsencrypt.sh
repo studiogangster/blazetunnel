@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(meddler.xyz *.meddler.xyz)
+domains=(blazetunnel.meddler.xyz *.blazetunnel.meddler.xyz)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="" # Adding a valid address is strongly recommended
@@ -71,7 +71,7 @@ echo "Performing custom"
 
 docker-compose run --rm --entrypoint "\
 
-  certbot certonly --manual --preferred-challenges=dns --email admin@meddler.xyz --server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d *.meddler.xyz -d meddler.xyz" certbot
+  certbot certonly --manual --preferred-challenges=dns --email admin@meddler.xyz --server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d *.blazetunnel.meddler.xyz -d blazetunnel.meddler.xyz" certbot
 echo
 
 
