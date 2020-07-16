@@ -2,11 +2,19 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/hako/branca"
 )
 
-const Secretkey = "supersecretkeyyoushouldnotcommit"
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
+var Secretkey = getEnv("SECRET_KEY", "supersecretkeyyoushouldnotcommit")
 
 func encrypt(data string) string {
 	b := branca.NewBranca(Secretkey) // This key must be exactly 32 bytes long.

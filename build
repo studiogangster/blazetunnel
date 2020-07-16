@@ -1,0 +1,1 @@
+ocker build  -t blazetune_server -f  ./docker/server/Dockerfile .

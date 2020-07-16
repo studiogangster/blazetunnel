@@ -1,8 +1,10 @@
 package server
 
 import (
-	"github.com/lucas-clemente/quic-go"
+	"log"
 	"net"
+
+	"github.com/lucas-clemente/quic-go"
 )
 
 // Server struct contains the runtime configuration
@@ -18,6 +20,10 @@ type Server struct {
 // NewServer is used to create a new Server instance
 // and initialize all the fields
 func NewServer(domain string, idleTimeout uint) *Server {
+	log.Println("Starting blazetunnel server")
+	log.Println("Domain", domain, idleTimeout)
+	log.Println("Idle Timeout", domain, idleTimeout)
+
 	return &Server{
 		domain:      domain,
 		idleTimeout: idleTimeout,

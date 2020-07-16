@@ -21,6 +21,7 @@ func Init() *cli.Command {
 				Aliases:  []string{"s"},
 				Usage:    "Auth server's address",
 				Required: true,
+				EnvVars:  []string{"server"},
 			},
 
 			&cli.Int64Flag{
@@ -35,12 +36,14 @@ func Init() *cli.Command {
 				Aliases:  []string{"u"},
 				Usage:    "Username",
 				Required: true,
+				EnvVars:  []string{"APPNAME"},
 			},
 			&cli.StringFlag{
 				Name:     "password",
 				Aliases:  []string{"p"},
 				Usage:    "Password",
 				Required: true,
+				EnvVars:  []string{"PASSWORD"},
 			},
 			&cli.StringFlag{
 				Name:     "service",
@@ -48,6 +51,7 @@ func Init() *cli.Command {
 				Usage:    "Service name",
 				Value:    "",
 				Required: false,
+				EnvVars:  []string{"service"},
 			},
 
 			&cli.Int64Flag{

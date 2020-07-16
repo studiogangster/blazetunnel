@@ -113,5 +113,6 @@ func (ts *TunnelState) newStream() (quic.Stream, error) {
 // Close closes the control stream and the session
 func (ts *TunnelState) Close() {
 	ts.ctlStream.Close()
-	ts.session.Close()
+	ts.session.CloseWithError(500, "Closing")
+
 }

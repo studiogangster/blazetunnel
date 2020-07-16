@@ -19,6 +19,7 @@ func Init() *cli.Command {
 			Name:     "tunnel",
 			Usage:    "Remote public tunnel address to connect to",
 			Required: true,
+			EnvVars:  []string{"tunnel"},
 		},
 
 		&cli.Int64Flag{
@@ -33,10 +34,11 @@ func Init() *cli.Command {
 			Required: true,
 		},
 		&cli.StringFlag{
-			Name:     "token",
-			Usage:    "auth-token ",
-			FilePath: ".blazetoken",
+			Name:  "token",
+			Usage: "auth-token ",
+			// FilePath: ".blazetoken",
 			Required: true,
+			EnvVars:  []string{"token"},
 		},
 		&cli.UintFlag{
 			Name:  "i,idle-timeout",
@@ -56,9 +58,10 @@ func Init() *cli.Command {
 
 func createSelfConnectingClient(ctx *cli.Context) error {
 
+	log.Println("createSelfConnectingClient")
 	for {
-		createClient(ctx)
-		log.Println("[DEBUG]", "Blazetunnel client was closed ")
+		err := createClient(ctx)
+		log.Println("[DEBUG]", "Blazetunnel client was closed ", err)
 		log.Println("[DEBUG]", "Creating new cient in ", reconnectDelay, "seconds")
 		<-time.After(reconnectDelay * time.Second)
 
@@ -86,6 +89,6 @@ func createClient(ctx *cli.Context) error {
 	}
 
 	tunnel = tunnel + ":" + tunnelport
-
+	log.Println("Connecting to", tunnel, local)
 	return NewClient(tunnel, local, ctx.Uint("i"), token).Start()
 }

@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/lucas-clemente/quic-go"
@@ -43,12 +42,12 @@ func (a *Auth) Start() error {
 		NextProtos:         []string{"quic-echo-example"},
 	}
 	session, err := quic.DialAddr(a.server, tlsConf, &quic.Config{
-		IdleTimeout: time.Duration(time.Minute * 1),
+		MaxIdleTimeout: time.Duration(time.Minute * 1),
 	})
 	if err != nil {
 		return err
 	}
-	defer session.Close()
+	defer session.CloseWithError(500, "Closing")
 
 	ctlStream, err := session.OpenStreamSync(context.Background())
 	if err != nil {
@@ -77,24 +76,33 @@ func (a *Auth) Start() error {
 
 func saveToken(authtoken string, auth Auth) error {
 
-	f, err := os.Create(".blazetoken")
-	if err != nil {
-		fmt.Println(err)
-		return err
+	// f, err := os.Create(".blazetoken")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return err
+	// }
+	// log.Println("Token:", authtoken)
+	// _, err = f.WriteString(authtoken)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	f.Close()
+	// 	return err
+	// }
+
+	// err = f.Close()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return err
+	// }
+
+	if authtoken == "" {
+		fmt.Println("Invalid Authtoken")
+
+	} else {
+		fmt.Println("Authtoken saved in .blazetoken", authtoken)
+
 	}
-	_, err = f.WriteString(authtoken)
-	if err != nil {
-		fmt.Println(err)
-		f.Close()
-		return err
-	}
-	fmt.Println("Authtoken saved in .blazetoken", authtoken)
 	fmt.Printf("Use:\n\tgo run main.go client --tunnel %s --local localhost:%d\n\tto connect to the internet\n", auth.server, auth.port)
-	err = f.Close()
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
 
 	if authtoken == "" {
 

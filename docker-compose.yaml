@@ -1,12 +1,94 @@
 version: "3"
 
+
 services:
+
+    server_dev:
+        image: golang
+        volumes:
+        - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
+        container_name: server_dev
+        # env_file:
+            # - .env
+        environment: 
+            -  secret=supersecretkeyyoushouldnotcommit
+            -  domain=blazetunnel.meddler.xyz
+        command: ./blazetunnel server -t 3600
+        working_dir: /go/src/github.com/rounak316/blazetunnel
+        # read_only: true
+        ports:
+            - 80:80/tcp
+            - 2723:2723/udp
+
+
+    client_dev_1:
+        image: golang
+        volumes:
+        - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
+        container_name: client_dev_1
+        # env_file:
+            # - .env
+        environment: 
+            # -  token=n87vve5uYvzzMi6kib01YE8SiDg0pMbmTTc94WCUkCVrPRo4gy06UsfuxnNOmTBVn0qLCZeZQ4FWmFP4vuaRuXIHTH
+            -  token=3GrYlCVxhGvrNPx0CBT720bSYqwFpKjCRih0c1ggeK6wl0ZnKpjlbmRES9RAGhWw1y8nOePs3ib3ccnJWuqvbYBpDaUm
+            -  tunnel=blazetunnel.meddler.xyz
+        command: ./blazetunnel client --local mockserver:8000 -i 3600
+        working_dir: /go/src/github.com/rounak316/blazetunnel
+        read_only: true
+        depends_on:
+            - mockserver
+
+    client_dev_2:
+        image: golang
+        volumes:
+        - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
+        container_name: client_dev_2
+        # env_file:
+            # - .env
+        environment: 
+            -  token=3GrYlDmXiP8v2x51k5zKCebzvOWqKmd5aCRVGpcF9TU3Jf5Q0rGkZ6EfmWDusJpoI4brrIIiJ0bMQx6jlv15AJpdjZOu
+            -  tunnel=blazetunnel.meddler.xyz
+        command: ./blazetunnel client --local mockserver:8000 -i 3600
+        working_dir: /go/src/github.com/rounak316/blazetunnel
+        read_only: true
+        depends_on:
+            - mockserver
+
+
+    auth_dev:
+        image: golang
+        volumes:
+        - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
+        container_name: clauth_devient_dev
+        # env_file:
+            # - .env
+        environment: 
+            -  SECRET_KEY=supersecretkey
+            -  APPNAME=t2
+            -  PASSWORD=supersecretkey
+            -  server=blazetunnel.meddler.xyz
+            -  service=boom2
+
+        command: ./blazetunnel auth -P 2723
+        working_dir: /go/src/github.com/rounak316/blazetunnel
+        read_only: true
+
+
+
+
+
+
+
+
+
     server:
         build: .
         container_name: server
         env_file:
             - .env
-        command: server --domain ${DOMAIN_NAME} -i 3600
+        environment: 
+            -  SECRET_KEY=supersecretkey
+        command: server --domain ${DOMAIN_NAME} -t 3600
         ports:
             - 80:80/tcp
             - 2723:2723/udp
@@ -19,17 +101,42 @@ services:
         container_name: client
         env_file:
             - .env
-        command: client --tunnel ${SERVICE_NAME}.${DOMAIN_NAME}:2723 --local mockserver:8000 -i 3600
+        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}" --local mockserver:8000 -i 3600
 
         # extra_hosts:
         # quick.server: 127.0.0.1
         # ports:
         # - 3001:3001/tcp
-        # - 2723:2723/udp
+        # - 2722:2723/udp
         depends_on:
             - mockserver
+        # volumes:
+            # - ./:/go/src/github.com/rounak316/blazetunnel
+
+
+    client_2:
+        build: .
+        container_name: client_2
+        env_file:
+            - .env
+        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}" --local mockserver:8000 -i 3600
+        depends_on:
+            - mockserver
+        # extra_hosts:
+        # quick.server: 127.0.0.1
+        # volumes:
+            # - ./:/go/src/github.com/rounak316/blazetunnel
+
+
+    auth:
+        build: .
+        container_name: auth
+        env_file:
+            - .env
+        command: auth --server ${DOMAIN_NAME} -u ${SERVICE_NAME} -p test -P 2723
         volumes:
             - ./:/go/src/github.com/rounak316/blazetunnel
+
 
     prodclient:
         build: https://github.com/rounak316/blazetunnel.git
@@ -60,15 +167,14 @@ services:
 
         ports:
             - 2723:2723/udp
+
     nginx:
         image: nginx:1.15-alpine
         restart: unless-stopped
         volumes:
             - ./nginx/data/nginx/app.conf:/etc/nginx/conf.d/app.conf
             - ./nginx/data/nginx/nginx.conf:/etc/nginx/nginx.conf
-
             - ./nginx/data/html:/usr/share/nginx/html
-
             - ./nginx/data/certbot/conf:/etc/letsencrypt
             - ./nginx/data/certbot/www:/var/www/certbot
         depends_on:

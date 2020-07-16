@@ -43,12 +43,12 @@ func (a *App) Start() error {
 
 	log.Println("Connecting to ", a.server+":"+strconv.Itoa(a.port))
 	session, err := quic.DialAddr(a.server+":"+strconv.Itoa(a.port), tlsConf, &quic.Config{
-		IdleTimeout: time.Duration(time.Minute * 1),
+		MaxIdleTimeout: time.Duration(time.Minute * 1),
 	})
 	if err != nil {
 		return err
 	}
-	defer session.Close()
+	defer session.CloseWithError(500, "Closing")
 
 	ctlStream, err := session.OpenStreamSync(context.Background())
 	if err != nil {
@@ -65,7 +65,7 @@ func (a *App) Start() error {
 	}
 	ctlStream.SetWriteDeadline(time.Time{})
 
-	fmt.Println("Registering with blazerecon server")
+	fmt.Println("Registering with blazerecon server", a.appname, a.password)
 	ctlStream.SetReadDeadline(time.Now().Add(time.Second * 5))
 
 	m, err := newmsg("", "").DecodeFrom(ctlStream)

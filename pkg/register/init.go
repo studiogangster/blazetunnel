@@ -20,18 +20,21 @@ func Init() *cli.Command {
 				Aliases:  []string{"s"},
 				Usage:    "Auth server's address",
 				Required: true,
+				EnvVars:  []string{"server"},
 			},
 			&cli.StringFlag{
-				Name:     "Appname",
-				Aliases:  []string{"a"},
-				Usage:    "Application's name",
+				Name:     "Username",
+				Aliases:  []string{"u"},
+				Usage:    "Username",
 				Required: true,
+				EnvVars:  []string{"APPNAME"},
 			},
 			&cli.StringFlag{
 				Name:     "Password",
 				Aliases:  []string{"p"},
 				Usage:    "Password",
 				Required: true,
+				EnvVars:  []string{"PASSWORD"},
 			},
 
 			&cli.Int64Flag{
@@ -51,9 +54,9 @@ func registerApp(ctx *cli.Context) error {
 	if server == "" {
 		return errors.New("server cannot be empty")
 	}
-	Appname := ctx.String("Appname")
-	if Appname == "" {
-		return errors.New("Appname can not be empty")
+	Username := ctx.String("Username")
+	if Username == "" {
+		return errors.New("Username can not be empty")
 	}
 
 	Password := ctx.String("Password")
@@ -66,5 +69,5 @@ func registerApp(ctx *cli.Context) error {
 		return errors.New("Port cannot be empty")
 	}
 
-	return NewApp(Appname, Password, server, port).Start()
+	return NewApp(Username, Password, server, port).Start()
 }

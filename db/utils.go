@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/boltdb/bolt"
 )
@@ -11,7 +12,9 @@ import (
 var appsBucket = "apps"
 var db *bolt.DB
 
-func init() {
+var doOnce sync.Once
+
+func initDb() {
 
 	_db, err := bolt.Open("tmp.db", 0600, nil)
 	if err != nil {
@@ -31,8 +34,16 @@ func init() {
 	})
 }
 
+func initialize() {
+
+	doOnce.Do(func() {
+		initDb()
+	})
+}
+
 func createapp(appname string, password string) error {
 
+	initialize()
 	if appname == "" {
 		return errors.New("Invalid appname")
 	}
@@ -58,6 +69,7 @@ func createapp(appname string, password string) error {
 }
 
 func getapp(appname string) (string, error) {
+	initialize()
 	var value = ""
 
 	err := db.View(func(tx *bolt.Tx) error {

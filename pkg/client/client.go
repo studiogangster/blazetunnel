@@ -56,7 +56,7 @@ func (c *Client) Start() error {
 	defer cancel()
 
 	session, err := quic.DialAddrContext(ctx, c.tunnel, tlsConf, &quic.Config{
-		IdleTimeout: time.Second * time.Duration(c.idleTimeout),
+		MaxIdleTimeout: time.Second * time.Duration(c.idleTimeout),
 	})
 
 	if err != nil {
@@ -69,7 +69,7 @@ func (c *Client) Start() error {
 		if ctx.Err() == nil {
 
 			log.Println("[DEBUG]", "Session not closed yet", "Attempt to close")
-			session.Close()
+			session.CloseWithError(500, "Closing")
 			log.Println("[DEBUG]", "Session Closed")
 		} else {
 			log.Println("[DEBUG]", "Session already closed")

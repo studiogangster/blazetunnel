@@ -32,6 +32,7 @@ func (s *Server) initPublic() error {
 }
 
 func (s *Server) startPublic() {
+	log.Printf("Starting public server")
 	for {
 		conn, err := s.publicListener.Accept()
 		if err != nil {

@@ -16,11 +16,13 @@ const handshakeTimeout = 5
 var newmsg = common.NewMessage
 
 func (s *Server) initTunnel() error {
+	log.Printf("Starting tunnel")
+
 	cfg := generateTLSConfig()
 	log.Println("Allowed protos: ", cfg.NextProtos)
 	cfg.NextProtos = []string{"h2", "http/1.1", "acme-tls/1", "quic-echo-example"}
 	ln, err := quic.ListenAddr(":2723", cfg, &quic.Config{
-		IdleTimeout: time.Second * time.Duration(s.idleTimeout),
+		MaxIdleTimeout: time.Second * time.Duration(s.idleTimeout),
 	})
 	if err != nil {
 		return err
@@ -57,7 +59,8 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 
 	close := func() {
 		ctlStream.Close()
-		session.Close()
+		session.CloseWithError(500, "Closing")
+
 	}
 
 	ctlStream.SetReadDeadline(time.Now().Add(time.Duration(handshakeTimeout) * time.Second))
@@ -101,7 +104,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		log.Println("Regisration err", err)
 		ctlStream.SetWriteDeadline(time.Time{})
 		// TODO: Introduce a sleep timeout to confirm delivery of message, and close the connection from client after recieving message
-		close()
+		// close()
 		return
 	}
 	// Check if authentication request
@@ -139,7 +142,7 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 		ctlStream.SetWriteDeadline(time.Time{})
 
 		log.Println("Error", err)
-		close()
+		// close()
 		return
 	}
 
