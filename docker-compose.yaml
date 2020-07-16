@@ -7,7 +7,7 @@ services:
         image: golang
         volumes:
         - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
-        container_name: server_dev
+        container_name: blazeserver
         # env_file:
             # - .env
         environment: 
