@@ -18,7 +18,8 @@ services:
         # read_only: true
         expose:
             - 80
-            - 2723
+        ports:
+            - 2723:2723/udp
 
 
     client_dev_1:
