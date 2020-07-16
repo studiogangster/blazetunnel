@@ -16,9 +16,9 @@ services:
         command: ./blazetunnel server -t 3600
         working_dir: /go/src/github.com/rounak316/blazetunnel
         # read_only: true
-        ports:
-            - 80:80/tcp
-            - 2723:2723/udp
+        expose:
+            - 80
+            - 2723
 
 
     client_dev_1:
@@ -181,4 +181,5 @@ services:
             - blazeserver
         ports:
             - "443:443"
+            - "80:80"
         command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
