@@ -64,13 +64,13 @@ services:
         # env_file:
             # - .env
         environment: 
-            -  SECRET_KEY=supersecretkey
+            -  SECRET_KEY=supersecretkey1
             -  APPNAME=t2
             -  PASSWORD=supersecretkey
             -  server=blazetunnel.meddler.xyz
             -  service=boom2
 
-        command: ./blazetunnel auth -P 2723
+        command: ./blazetunnel register -P 2723
         working_dir: /go/src/github.com/rounak316/blazetunnel
         read_only: true
 

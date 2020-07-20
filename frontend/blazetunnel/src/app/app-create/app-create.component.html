@@ -1,0 +1,20 @@
+<div fxLayout="column" >
+
+    <div class="create">
+
+        <mat-form-field fxFill class="example-form-field">
+            <mat-label>New Application </mat-label>
+            <input (keyup.enter)="createApp(value)" matInput type="text" [(ngModel)]="value">
+    
+            <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                <mat-icon>close</mat-icon>
+            </button>
+    
+    
+        </mat-form-field>
+    
+    </div>
+    
+    <app-get #applicationList class="create"></app-get>
+     
+</div>

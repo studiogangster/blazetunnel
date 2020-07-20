@@ -1,0 +1,24 @@
+.flex{
+    display: flex;
+    flex: 1;
+}
+
+.create{
+    margin-bottom: 1rem;
+}
+.item{
+    display: flex;
+    float: 1;
+}
+.right{
+    margin-left: auto;
+}
+
+:host ::ng-deep .mat-list-item-content  {
+
+    width: 100%;
+}
+
+.list{
+    margin-top: 1rem;
+}
