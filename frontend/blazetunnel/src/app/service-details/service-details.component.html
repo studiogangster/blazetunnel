@@ -1,5 +1,14 @@
 <mat-tab-group animationDuration="0ms">
     <mat-tab label="Windows">
+
+        <mat-form-field fxFlex  class="example-form-field">
+            <input disabled matInput type="text" [(ngModel)]="token" >
+            <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                <mat-icon>content_copy</mat-icon>
+
+            </button>
+        </mat-form-field>
+
         <pre>
 
             <code [highlight]="code"></code>

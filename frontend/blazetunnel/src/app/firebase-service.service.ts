@@ -30,7 +30,7 @@ export class FirebaseServiceService {
 
       return user.getIdToken().then(token => {
 
-        return this.http.post("/api", { id_token: token, app_id: app_id, service_id: service_id }).subscribe()
+        return this.http.post("/api", { id_token: token, app_id: app_id, service_id: service_id }).toPromise()
 
       })
     })

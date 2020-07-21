@@ -14,11 +14,16 @@ export class ServiceDetailsComponent implements OnInit {
   @Input('service_id') service_id = ''
 
 
+
+  token = ''
+
   constructor(private fbService: FirebaseServiceService) { }
 
   ngOnInit(): void {
 
-    this.fbService.GetAuthToken(this.app_id, this.service_id).then()
+    this.fbService.GetAuthToken(this.app_id, this.service_id).then(d => {
+      this.token = d['data']
+    })
   }
 
 }
