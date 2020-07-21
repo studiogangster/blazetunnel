@@ -49,6 +49,20 @@ func (m *Message) EnryptTo(w io.Writer) error {
 	return NewMessage(m.Command, token).EncodeTo(w)
 }
 
+func GenerateAuthToken(data string) string {
+	b := branca.NewBranca(Secretkey) // This key must be exactly 32 bytes long.
+	// Encode String to Branca Token.
+	token, err := b.EncodeToString(data)
+	log.Println("Encryptinh", Secretkey, token, data)
+	if err != nil {
+		log.Println("Encryptinh Failure", err)
+		return ""
+	}
+
+	log.Println("Encryptinh Success", token)
+	return token
+}
+
 func (m *Message) Authenticate() error {
 	b := branca.NewBranca(Secretkey) // This key must be exactly 32 bytes long.
 	// Encode String to Branca Token.

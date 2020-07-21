@@ -1,0 +1,14 @@
+<h1 mat-dialog-title> {{data.app.app_name}}</h1>
+<div mat-dialog-content>
+  <p>Create a new service</p>
+  <mat-form-field>
+    <mat-label>Service Name</mat-label>
+
+    <input #serviceName placeholder="Create Service" #service matInput type="text"
+      (keyup.enter)="create_service(data.app.id,  serviceName.value)">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+
+  <button mat-button   (click)="create_service(data.app.id,  serviceName.value)" cdkFocusInitial>Ok</button>
+</div>

@@ -5,6 +5,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ export class AuthService {
     userDataSubject = new BehaviorSubject(null); // Save logged in user data
 
     constructor(
+        private http: HttpClient,
         public afs: AngularFirestore,   // Inject Firestore service
         public afAuth: AngularFireAuth, // Inject Firebase auth service
         public router: Router,
@@ -24,6 +26,11 @@ export class AuthService {
         logged in and setting up null when logged out */
         this.afAuth.authState.subscribe(user => {
             this.userDataSubject.next(user)
+
+            user.getIdToken(true).then(d => {
+                console.log('token', d)
+            })
+
 
             if (user) {
                 this.userData = user;

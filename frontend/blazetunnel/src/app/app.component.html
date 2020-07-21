@@ -3,42 +3,83 @@
 
   <mat-toolbar>
     <mat-toolbar-row>
-
-
       <button type="button" mat-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       <span>Blazetunnel</span>
-
-
-
     </mat-toolbar-row>
   </mat-toolbar>
 
   <mat-drawer [opened]="true" #drawer class="example-sidenav" mode="side">
 
 
-    <mat-list>
-      <div mat-subheader>Folders</div>
+    <mat-toolbar color="accent">
+      <mat-toolbar-row>
+        <span>Blazetunnel</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+
+
+
+    <mat-nav-list>
+      <div mat-subheader>Dashboard</div>
+
+
+      <mat-list-item>
+
+        <div mat-line>Create App</div>
+
+      </mat-list-item>
+
+
+
+
+
+
+
+
       <mat-list-item [routerLink]="folder?.route" *ngFor="let folder of folders">
-        <mat-icon mat-list-icon>folder</mat-icon>
+        <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
         <div mat-line>{{folder.name}}</div>
         <!-- <div mat-line> {{folder.description | date}} </div> -->
       </mat-list-item>
       <mat-divider></mat-divider>
-      <div mat-subheader>Notes</div>
-      <mat-list-item *ngFor="let note of notes">
-        <mat-icon mat-list-icon>note</mat-icon>
-        <div mat-line>{{note.name}}</div>
-        <div mat-line> {{note.description | date}} </div>
+      <div *ngIf="applications ; else loading" mat-subheader>Applications</div>
+      <mat-list-item *ngFor="let app of applications">
+        <div mat-line>{{app.app_name}}</div>
       </mat-list-item>
-    </mat-list>
+
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item (click)="authService.SignOut()">
+
+        <div mat-line>Sign Out</div>
+
+      </mat-list-item>
+
+    </mat-nav-list>
 
   </mat-drawer>
 
   <div class="example-sidenav-content">
-    <router-outlet></router-outlet>
+
+    <div class="center" fxFlex="60%" fxFlex.lt-md="800" fxFlex.lt-lg="80%"  fxFlexAlign="center ">
+      <router-outlet></router-outlet>
+
+    </div>
 
   </div>
 
 </mat-drawer-container>
+
+<ng-template #loading>
+
+  <div class="loader" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="50" size="small"></mat-spinner>
+  </div>
+
+
+
+</ng-template>

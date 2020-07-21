@@ -34,6 +34,15 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatDialogModule} from '@angular/material/dialog';
+import { CreateServiceDialogComponent } from './dialogs/create-service-dialog/create-service-dialog.component';
+import {MatDividerModule} from '@angular/material/divider';
+import { CreateAppDialogComponent } from './dialogs/create-app-dialog/create-app-dialog.component';
+import { ServiceDetailsDialogComponent } from './dialogs/service-details-dialog/service-details-dialog.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { HighlightModule } from 'ngx-highlightjs';
+import { ServiceDetailsComponent } from './service-details/service-details.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -44,9 +53,18 @@ import {MatMenuModule} from '@angular/material/menu';
     VerifyemailComponent,
     DashboardComponent,
     AppCreateComponent,
-    GetAppComponent
+    GetAppComponent,
+    CreateServiceDialogComponent,
+    CreateAppDialogComponent,
+    ServiceDetailsDialogComponent,
+    ServiceDetailsComponent
   ],
   imports: [
+    HttpClientModule,
+    HighlightModule,
+    MatTabsModule,
+    MatDividerModule,
+    MatDialogModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,

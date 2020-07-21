@@ -4,7 +4,11 @@
 }
 
 .create{
-    margin-bottom: 1rem;
+
+    margin-left: auto;
+    display: flex;
+    // margin-left: 1rem;
+    // margin-right: 1rem;
 }
 .item{
     display: flex;
@@ -20,5 +24,25 @@
 }
 
 .list{
-    margin-top: 1rem;
+
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+}
+
+.divider{
+    margin: 1rem;
+}
+
+mat-list{
+    max-height: 300px;
+    overflow: auto;
+}
+
+.textbtn{
+    text-align: left;
+}
+
+.loader{
+    margin: 1rem;
 }

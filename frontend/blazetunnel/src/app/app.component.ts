@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FirebaseServiceService } from './firebase-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from './shared/services/auth.service';
+import { filter } from 'rxjs/operators';
 
 export interface Section {
   name: string;
@@ -14,16 +17,12 @@ export interface Section {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'blazetunnel';
   showFiller = false;
+  applications = undefined;
 
   folders: Section[] = [
-    {
-      name: 'Dashboard',
-      description: new Date('1/1/16'),
-      route: ['/dashboard'],
-    },
 
     {
       name: 'Applications',
@@ -33,19 +32,21 @@ export class AppComponent {
     },
 
     {
+      name: 'Profile',
+      description: new Date('1/1/16'),
+      route: ['/dashboard'],
+    },
+
+
+    {
       name: 'Sign In',
       description: new Date('1/17/16'),
       route: ['/sign-in'],
 
     },
 
-    
-    {
-      name: 'Sign Out',
-      description: new Date('1/28/16'),
-      route: ['/sign-out'],
 
-    }
+
   ];
 
 
@@ -64,12 +65,46 @@ export class AppComponent {
     }
   ];
 
-  constructor(private firebaseService: FirebaseServiceService) {
+
+
+  constructor(
+    private fbService: FirebaseServiceService, public authService: AuthService,
+
+    public dialog: MatDialog
+  ) {
+
+    this.fbService.getApps().then()
 
   }
+  ngOnInit(): void {
 
-  test(){
-    this.firebaseService.registerDomain( { "test" : 123 } ).then( d=>{console.log(d)} ).catch(d=>{console.log(d)})
+    this.refreshApplications()
+  }
+
+  refreshApplications() {
+
+    this.authService.userDataSubject.pipe(filter(user => { return user })).subscribe(user => {
+
+
+      this.applications = undefined;
+
+      this.fbService.getApps().then(data => {
+
+        this.applications = []
+
+        data.forEach(d => {
+          let data = d.data()
+          data.id = d.id
+          this.applications.push(data)
+
+        })
+
+      })
+    })
+  }
+
+  test() {
+    this.fbService.registerDomain({ "test": 123 }).then(d => { console.log(d) }).catch(d => { console.log(d) })
   }
 
 }

@@ -7,6 +7,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { filter } from 'rxjs/operators';
 import { app } from 'firebase';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateServiceDialogComponent } from '../dialogs/create-service-dialog/create-service-dialog.component';
+import { ServiceDetailsDialogComponent } from '../dialogs/service-details-dialog/service-details-dialog.component';
 
 @Component({
   selector: 'app-get',
@@ -20,16 +23,52 @@ export class GetAppComponent implements OnInit {
   serviceList$ = this.serviceList.asObservable()
 
   applications = undefined;
-  constructor(private fbService: FirebaseServiceService, private authService: AuthService) { }
+  constructor(private fbService: FirebaseServiceService, private authService: AuthService,
 
+    public dialog: MatDialog
+  ) { }
+
+  openServiceCreationDialog(app): void {
+    const dialogRef = this.dialog.open(CreateServiceDialogComponent, {
+      width: '250px',
+      data: { app: app }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+
+      if (result) {
+        this.opened(app.id)
+      }
+
+    });
+  }
+
+
+  openServiceDetailDialog(app_id: string, service_id: string) {
+    const dialogRef = this.dialog.open(ServiceDetailsDialogComponent, {
+      width: 'auto',
+      data: { app: app, app_id: app_id, service_id: service_id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+
+      if (result) {
+
+      }
+
+    });
+  }
 
   refreshApplications() {
 
     this.authService.userDataSubject.pipe(filter(user => { return user })).subscribe(user => {
 
+
       this.applications = undefined;
 
-      this.fbService.getApps(user.uid).subscribe(data => {
+      this.fbService.getApps().then(data => {
 
         this.applications = []
 
@@ -76,7 +115,7 @@ export class GetAppComponent implements OnInit {
   opened(app_id) {
     this._resetServiceList()
     this.getServices(app_id)
-      .subscribe(data => {
+      .then(data => {
         let _data = []
         data.forEach(_d => {
           let __d = _d.data()
@@ -106,6 +145,15 @@ export class GetAppComponent implements OnInit {
     })
 
   }
+
+  enableApp(app_id, enabled) {
+    this.fbService.enableApp(app_id, enabled).then(result => {
+      this.opened(app_id)
+    })
+
+  }
+
+
 
   deleteService(app_id, service_id) {
     this._resetServiceList()

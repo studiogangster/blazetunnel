@@ -1,4 +1,6 @@
-<mat-accordion>
+<!-- <div mat-subheader>Application</div> -->
+
+<mat-accordion  >
 
 
 
@@ -16,7 +18,9 @@
                 <mat-panel-description fxLayout="column" fxLayoutAlign="center end">
 
                     <div fxLayout="row" fxLayoutAlign="center center">
-                        <mat-slide-toggle (click)="$event.stopPropagation();" labelPosition="before">
+                        <mat-slide-toggle (change)="enableApp(app.id , $event.checked)"
+                            [checked]="app?.enabled || false" (click)="$event.stopPropagation();"
+                            labelPosition="before">
                         </mat-slide-toggle>
 
                         <button (click)="$event.stopPropagation();" mat-icon-button [matMenuTriggerFor]="menu">
@@ -39,36 +43,32 @@
 
 
 
-            <div fxFlex fxLayout="column" fxGap="1rem">
+            <div fxGap="1rem">
+                <mat-divider class="divider"></mat-divider>
+
+                
+                <button (click)="openServiceCreationDialog(app)" class="create" color="accent" mat-raised-button>Create
+                    service</button>
 
 
                 <ng-container *ngIf=" serviceList$ | async as services  ; else loading ">
 
-                    <mat-toolbar>
-
-
-
-                        <input placeholder="Create Service" #service matInput type="text"
-                            (keyup.enter)="create_service(app.id,  service.value)">
-
-
-
-
-                        <button mat-button>Create new</button>
-
-
-
-                    </mat-toolbar>
 
 
 
 
 
 
-                    <ng-container *ngIf="services">
 
-                        <mat-list *ngIf="services.length > 0" class="list">
-                            <div mat-subheader>Services</div>
+                    <ng-container *ngIf="services && services.length > 0">
+
+
+                        <mat-divider class="divider"></mat-divider>
+
+
+                        <div mat-subheader>Services</div>
+
+                        <mat-list class="list">
 
                             <ng-container>
 
@@ -79,15 +79,21 @@
 
                                     <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
                                     <div mat-line>
-                                        <button mat-button>
+                                        <button fxFlex fxFill class="textbtn"
+                                            (click)="openServiceDetailDialog(  app.id , data.id ) ; $event.stopPropagation();"
+                                            mat-button>
                                             {{data?.service_name}}
                                         </button>
-
-
-
                                     </div>
 
-                                    <mat-slide-toggle [checked]="data?.enabled || false"
+                                    <button
+                                        (click)="openServiceDetailDialog(  app.id , data.id ) ; $event.stopPropagation();"
+                                        mat-icon-button>
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+
+                                    <mat-slide-toggle [disabled]="! ( app?.enabled || false)"
+                                        [checked]="data?.enabled || false"
                                         (change)="enableService(app.id, data.id , $event.checked)" class="right"
                                         labelPosition="before">
                                     </mat-slide-toggle>
@@ -96,23 +102,32 @@
                                         [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>
                                     </button>
+
+
                                     <mat-menu #menu="matMenu">
                                         <button (click)="deleteService( app.id, data.id  )"
                                             mat-menu-item>Delete</button>
 
-                                    </mat-menu>
+                                        <button (click)="deleteService( app.id, data.id  )"
+                                            mat-menu-item>Export</button>
 
+                                    </mat-menu>
 
                                 </mat-list-item>
 
                             </ng-container>
                         </mat-list>
 
+
+
                     </ng-container>
 
 
 
                 </ng-container>
+
+
+
 
             </div>
         </mat-expansion-panel>
@@ -121,7 +136,7 @@
 
 <ng-template #loading>
 
-    <div fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="column" diameter="50" class="loader" fxLayoutAlign="center center">
         <mat-spinner></mat-spinner>
     </div>
 

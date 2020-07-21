@@ -5,8 +5,6 @@ services:
 
     blazeserver:
         image: golang
-        volumes:
-        - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
         container_name: blazeserver
         # env_file:
             # - .env
@@ -15,11 +13,16 @@ services:
             -  domain=blazetunnel.meddler.xyz
         command: ./blazetunnel server -t 3600
         working_dir: /go/src/github.com/rounak316/blazetunnel
+        volumes: 
+            -  ./pkg/restapi/private.json:/secret/firebase.json
+            - ./blazetunnel:/go/src/github.com/rounak316/blazetunnel/blazetunnel
+
         # read_only: true
         expose:
             - 80
         ports:
             - 2723:2723/udp
+            - 90:8080
 
 
     client_dev_1:
@@ -171,11 +174,13 @@ services:
 
     nginx:
         image: nginx:1.15-alpine
-        restart: unless-stopped
+        # restart: unless-stopped
         volumes:
+            - ./frontend/blazetunnel/dist/blazetunnel/:/usr/share/nginx/html/
+
             - ./nginx/data/nginx/app.conf:/etc/nginx/conf.d/app.conf
             - ./nginx/data/nginx/nginx.conf:/etc/nginx/nginx.conf
-            - ./nginx/data/html:/usr/share/nginx/html
+            - ./nginx/data/html/error.html:/usr/share/nginx/html/error.html
             - ./nginx/data/certbot/conf:/etc/letsencrypt
             - ./nginx/data/certbot/www:/var/www/certbot
         depends_on:

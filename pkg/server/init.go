@@ -2,6 +2,7 @@ package server
 
 import (
 	"blazetunnel/common"
+	"blazetunnel/pkg/restapi"
 	"errors"
 
 	"github.com/urfave/cli/v2"
@@ -60,6 +61,8 @@ func createServer(ctx *cli.Context) error {
 	}
 
 	common.SetSecretKey(secret)
+
+	go restapi.StartRestApiServer()
 	NewServer(domain, ctx.Uint("t")).Start()
 	return nil
 }

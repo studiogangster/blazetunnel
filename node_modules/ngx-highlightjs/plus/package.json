@@ -1,0 +1,13 @@
+{
+  "main": "../bundles/ngx-highlightjs-plus.umd.js",
+  "module": "../fesm5/ngx-highlightjs-plus.js",
+  "es2015": "../fesm2015/ngx-highlightjs-plus.js",
+  "esm5": "../esm5/plus/ngx-highlightjs-plus.js",
+  "esm2015": "../esm2015/plus/ngx-highlightjs-plus.js",
+  "fesm5": "../fesm5/ngx-highlightjs-plus.js",
+  "fesm2015": "../fesm2015/ngx-highlightjs-plus.js",
+  "typings": "ngx-highlightjs-plus.d.ts",
+  "metadata": "ngx-highlightjs-plus.metadata.json",
+  "sideEffects": false,
+  "name": "ngx-highlightjs/plus"
+}

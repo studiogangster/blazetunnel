@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseServiceService } from '../firebase-service.service';
 import { GetAppComponent } from '../get-app/get-app.component';
+import { CreateAppDialogComponent } from '../dialogs/create-app-dialog/create-app-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create',
@@ -12,7 +14,11 @@ export class AppCreateComponent implements OnInit {
   @ViewChild('applicationList') applicationList: GetAppComponent;
   value = '';
 
-  constructor(private fbService: FirebaseServiceService) { }
+  constructor(private fbService: FirebaseServiceService,
+
+    public dialog: MatDialog
+
+  ) { }
 
   ngOnInit(): void {
   }
@@ -33,4 +39,24 @@ export class AppCreateComponent implements OnInit {
         console.log(_)
       })
   }
+
+
+
+  openServiceCreationDialog(): void {
+    const dialogRef = this.dialog.open(CreateAppDialogComponent, {
+      width: '250px',
+      data: {  }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+
+      if (result) {
+        this.applicationList.refreshApplications()
+
+      }
+
+    });
+  }
+
 }
