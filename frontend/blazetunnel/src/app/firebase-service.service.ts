@@ -16,14 +16,17 @@ export class FirebaseServiceService {
   // Get Auth Token 
   GetAuthToken(app_id: string, service_id: string) {
 
-  //   return of(`
-  //   {
-  //     "status": false,
-  //     "auth_token": "ThisIsAnAuthTokn"
-  // }
-  //   `)
+    //   return of(`
+    //   {
+    //     "status": false,
+    //     "auth_token": "ThisIsAnAuthTokn"
+    // }
+    //   `)
 
     return this.authService.currentUser.then(user => {
+
+      if (!user)
+        return
 
       return user.getIdToken().then(token => {
 
@@ -51,6 +54,9 @@ export class FirebaseServiceService {
 
 
     return this.authService.currentUser.then(user => {
+      if (!user)
+        return
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
@@ -61,6 +67,9 @@ export class FirebaseServiceService {
   createService(app_id, service_name) {
 
     return this.authService.currentUser.then(user => {
+
+      if (!user)
+        return
 
       return this.firestore
         .collection("app").doc(user.uid)
@@ -75,6 +84,12 @@ export class FirebaseServiceService {
   getApps() {
 
     return this.authService.currentUser.then(user => {
+
+      if (!user)
+        return
+
+      console.log('user', user)
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
@@ -89,6 +104,9 @@ export class FirebaseServiceService {
 
 
     return this.authService.currentUser.then(user => {
+      if (!user)
+        return
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
@@ -104,6 +122,9 @@ export class FirebaseServiceService {
   deleteApp(app_id) {
 
     return this.authService.currentUser.then(user => {
+      if (!user)
+        return
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
@@ -117,6 +138,9 @@ export class FirebaseServiceService {
   enableApp(app_id, enabled) {
 
     return this.authService.currentUser.then(user => {
+      if (!user)
+        return
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
@@ -135,6 +159,9 @@ export class FirebaseServiceService {
   enableService(app_id, service_id, enabled) {
 
     return this.authService.currentUser.then(user => {
+      if (!user)
+        return
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
@@ -155,6 +182,10 @@ export class FirebaseServiceService {
   deleteService(app_id, service_id) {
 
     return this.authService.currentUser.then(user => {
+
+      if (!user)
+        return
+
       return this.firestore
         .collection("app").doc(user.uid)
         .collection("app")
