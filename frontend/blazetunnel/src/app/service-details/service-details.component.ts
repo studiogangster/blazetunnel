@@ -18,7 +18,7 @@ export class ServiceDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.fbService.GetAuthToken(this.app_id, this.service_id).subscribe()
+    this.fbService.GetAuthToken(this.app_id, this.service_id).then()
   }
 
 }

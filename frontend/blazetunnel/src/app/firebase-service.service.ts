@@ -16,21 +16,21 @@ export class FirebaseServiceService {
   // Get Auth Token 
   GetAuthToken(app_id: string, service_id: string) {
 
-    return of(`
-    {
-      "status": false,
-      "auth_token": "ThisIsAnAuthTokn"
-  }
-    `)
+  //   return of(`
+  //   {
+  //     "status": false,
+  //     "auth_token": "ThisIsAnAuthTokn"
+  // }
+  //   `)
 
-    // return this.authService.currentUser.then(user => {
+    return this.authService.currentUser.then(user => {
 
-    //   return user.getIdToken().then(token => {
+      return user.getIdToken().then(token => {
 
-    //     return this.http.post("http://localhost:90", { id_token: token, app_id: app_id, service_id: service_id }).subscribe()
+        return this.http.post("/api", { id_token: token, app_id: app_id, service_id: service_id }).subscribe()
 
-    //   })
-    // })
+      })
+    })
   }
 
   registerDomain(data) {
