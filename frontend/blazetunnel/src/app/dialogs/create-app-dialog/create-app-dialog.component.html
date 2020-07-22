@@ -4,8 +4,9 @@
   <mat-form-field>
     <mat-label>Application Name</mat-label>
 
-    <input #appName placeholder="App I" #service matInput type="text"
+    <input  maxlength="12" specialIsAlphaNumeric #appName placeholder="App I" #service matInput type="text"
       (keyup.enter)="create_app(appName.value)">
+      
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

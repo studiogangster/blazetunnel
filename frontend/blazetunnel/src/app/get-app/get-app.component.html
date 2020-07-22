@@ -10,9 +10,9 @@
             hideToggle>
             <mat-expansion-panel-header>
                 <mat-panel-title fxLayout="column" fxLayoutAlign="center start">
-                    <button mat-button>
+
                         {{app.app_name  }}
-                    </button>
+
                 </mat-panel-title>
 
                 <mat-panel-description fxLayout="column" fxLayoutAlign="center end">
@@ -78,19 +78,30 @@
                                 <mat-list-item class=" item" *ngFor="let data of services ">
 
                                     <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
-                                    <div mat-line>
+                                    <!-- <div mat-line>
                                         <button fxFlex fxFill class="textbtn"
                                             (click)="openServiceDetailDialog(  app.id , data.id ) ; $event.stopPropagation();"
                                             mat-button>
                                             {{data?.service_name}}
                                         </button>
+                                    </div> -->
+                                    <div mat-line>
+                                        <a 
+                                        (click)="openServiceDetailDialog(  app.id , data.id ) ; $event.stopPropagation();"
+                                        
+                                        fxFlex fxFill class="textbtn"
+
+
+                                            mat-button>
+                                            {{app?.app_name}}-{{data?.service_name}}.blazetunnel.meddler.xyz
+                                    </a>
                                     </div>
 
-                                    <button
-                                        (click)="openServiceDetailDialog(  app.id , data.id ) ; $event.stopPropagation();"
-                                        mat-icon-button>
-                                        <mat-icon>content_copy</mat-icon>
-                                    </button>
+                                    <a
+                                    target="_blank" [href]="'//' +   app?.app_name + '-' + data?.service_name + '.blazetunnel.meddler.xyz'" 
+                                        mat-button>
+                                        <mat-icon>north_east</mat-icon>
+                                </a>
 
                                     <mat-slide-toggle [disabled]="! ( app?.enabled || false)"
                                         [checked]="data?.enabled || false"
@@ -98,7 +109,7 @@
                                         labelPosition="before">
                                     </mat-slide-toggle>
 
-                                    <button (click)="$event.stopPropagation();" mat-icon-button
+                                    <button (click)="$event.stopPropagation();" mat-button
                                         [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>
                                     </button>

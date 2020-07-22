@@ -44,6 +44,7 @@ import { HighlightModule } from 'ngx-highlightjs';
 import { ServiceDetailsComponent } from './service-details/service-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SafePipe } from './safe.pipe';
+import { SpecialCharacterDirective } from './special-character.directive';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { SafePipe } from './safe.pipe';
     CreateAppDialogComponent,
     ServiceDetailsDialogComponent,
     ServiceDetailsComponent,
-    SafePipe
+    SafePipe,
+    SpecialCharacterDirective
   ],
   imports: [
     HttpClientModule,

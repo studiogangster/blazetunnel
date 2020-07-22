@@ -1,19 +1,29 @@
-<mat-tab-group animationDuration="0ms">
-    <mat-tab label="Windows">
 
-        <mat-form-field fxFlex  class="example-form-field">
-            <input disabled matInput type="text" [(ngModel)]="token" >
+
+
+<mat-tab-group *ngIf="token ; else loading"  animationDuration="0ms">
+
+    <mat-tab label="Docker Compose">
+
+
+
+        <pre>
+            <code [highlight]="docker_code[0] + token+ docker_code[1]"></code>
+          </pre>
+    </mat-tab>
+
+
+    <mat-tab label="Auth Token">
+
+        <mat-form-field fxFlex class="example-form-field">
+            <input disabled matInput type="text" [(ngModel)]="token">
             <button mat-button matSuffix mat-icon-button aria-label="Clear">
                 <mat-icon>content_copy</mat-icon>
 
             </button>
         </mat-form-field>
-
-        <pre>
-
-            <code [highlight]="code"></code>
-          </pre>
     </mat-tab>
+
 
     <mat-tab label="Mac OSX">
         <pre>
@@ -33,7 +43,7 @@
           </pre>
     </mat-tab>
 
-    <mat-tab label="Docker Compose">
+    <mat-tab label="Windows">
         <pre>
             <code [highlight]="code"></code>
           </pre>
@@ -42,3 +52,14 @@
 
 
 </mat-tab-group>
+
+
+<ng-template #loading>
+
+    <div class="loader" fxLayout="column" fxLayoutAlign="center center">
+      <mat-spinner diameter="50" size="small"></mat-spinner>
+    </div>
+  
+  
+  
+  </ng-template>
