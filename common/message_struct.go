@@ -82,8 +82,8 @@ func (m *Message) Authenticate() error {
 	// return nil
 
 	// authenticated := (&db.App{
-	// 	Appname:  credentials[0],
-	// 	Password: credentials[1],
+	// Appname:  credentials[0],
+	// Password: credentials[1],
 	// }).Authenticate()
 
 	// if authenticated {

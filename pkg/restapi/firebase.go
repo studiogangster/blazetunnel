@@ -79,9 +79,9 @@ func findService(uid string, appId string, serviceId string) (*ServiceData, erro
 		Domain:      "blazetunnel.meddler.xyz",
 	}
 
-	token := common.GenerateAuthToken(response.Appname + "-" + response.ServiceName + "." + response.Domain)
+	token := common.GenerateAuthToken(response.Appname + "-" + response.ServiceName) //+ "." + response.Domain)
 	response.Token = token
-	response.Endpoint = response.Appname + "-" + response.ServiceName + "." + response.Domain
+	response.Endpoint = response.Appname + "-" + response.ServiceName //+ "." + response.Domain
 
 	log.Println("token", token)
 	return response, nil
