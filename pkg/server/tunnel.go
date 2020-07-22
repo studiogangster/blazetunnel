@@ -155,13 +155,15 @@ func (s *Server) handleTunnelSession(session quic.Session) {
 
 	// Authenticate server
 
-	err = m.Authenticate()
+	// TODO: Removing authentication and moving to stateless token Brance Bitch
 
-	if err != nil {
-		close()
-		log.Println("Authenticated failed", m.Context, err)
-		return
-	}
+	// err = m.Authenticate()
+
+	// if err != nil {
+	// 	close()
+	// 	log.Println("Authenticated failed", m.Context, err)
+	// 	return
+	// }
 
 	serviceName := m.Context
 
