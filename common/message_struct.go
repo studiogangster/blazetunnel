@@ -1,7 +1,6 @@
 package common
 
 import (
-	"blazetunnel/db"
 	"errors"
 	"io"
 	"log"
@@ -78,24 +77,27 @@ func (m *Message) Authenticate() error {
 
 	if len(credentials) == 3 {
 
-		authenticated := (&db.App{
-			Appname:  credentials[0],
-			Password: credentials[1],
-		}).Authenticate()
+		service = credentials[2] + "-" + credentials[0]
+		return nil
 
-		if authenticated {
+		// authenticated := (&db.App{
+		// 	Appname:  credentials[0],
+		// 	Password: credentials[1],
+		// }).Authenticate()
 
-			if credentials[2] == "" {
-				service = credentials[0]
-			} else {
-				service = credentials[2] + "-" + credentials[0]
-			}
+		// if authenticated {
 
-		} else {
-			service = ""
-			return errors.New("Invalid Credentials")
+		// if credentials[2] == "" {
+		// service = credentials[0]
+		// } else {
+		// service = credentials[2] + "-" + credentials[0]
+		// }
 
-		}
+		// } else {
+		// service = ""
+		// return errors.New("Invalid Credentials")
+
+		// }
 
 	} else {
 		service = ""

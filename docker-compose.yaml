@@ -34,7 +34,7 @@ services:
             # - .env
         environment: 
             # -  token=n87vve5uYvzzMi6kib01YE8SiDg0pMbmTTc94WCUkCVrPRo4gy06UsfuxnNOmTBVn0qLCZeZQ4FWmFP4vuaRuXIHTH
-            -  token=MS5HzVnTgwbqwtLf8VIALyBRJI7vk1sKh7iDiOMYnjfFzvGAfSvg5g3em8lpTTnxE2hp4vq6DI8ze4i4qbEkkc8B5I6VVz6vjXYSun5dFb6gL
+            -  token=MS5HzfesBwgqjaEbNhrYDRRYGJEScxtjiCrlQkS6iJuNMIoCkU5klaH9BlsUcQW0qhkn3X57Z5KOekFDqL2JMTuFuF6opvIYGUVylkSlVP5Y4
             -  tunnel=blazetunnel.meddler.xyz
         command: ./blazetunnel client --local mockserver:8000 -i 3600
         working_dir: /go/src/github.com/rounak316/blazetunnel
