@@ -8,56 +8,98 @@
       </button>
       <span>Blazetunnel</span>
     </mat-toolbar-row>
+
+
   </mat-toolbar>
 
-  <mat-drawer [opened]="true" #drawer class="example-sidenav" mode="push">
+  <mat-drawer  #sidenav [opened]="false" #drawer class="example-sidenav" mode="push">
 
 
     <mat-toolbar color="accent">
-      <mat-toolbar-row>
-        <span>Blazetunnel</span>
+
+
+      <mat-toolbar-row *ngIf="authService.userData as user ; else loading">
+
+        <div [ngStyle]="{'background-image': 'url(' + user.photoURL  + ')'   } " mat-card-avatar
+          class="example-header-image"></div>
+
+        <span class="name">
+          {{(user.displayName) ? user.displayName : 'User'}}
+
+
+        </span>
+
       </mat-toolbar-row>
+
+
     </mat-toolbar>
 
 
 
 
     <mat-nav-list>
-      <div mat-subheader>Dashboard</div>
-
-
-      <mat-list-item>
-
-        <div mat-line>Create App</div>
-
-      </mat-list-item>
 
 
 
 
+      <ng-container *ngIf="authService.userDataSubject | async  as user ; else  menuNotLoggedIn">
+        <!-- If Logged In -->
+
+        <div mat-subheader>Dashboard</div>
+
+        <mat-divider></mat-divider>
 
 
 
 
-      <mat-list-item [routerLink]="folder?.route" *ngFor="let folder of folders">
-        <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
-        <div mat-line>{{folder.name}}</div>
-        <!-- <div mat-line> {{folder.description | date}} </div> -->
-      </mat-list-item>
-      <mat-divider></mat-divider>
-      <div *ngIf="applications ; else loading" mat-subheader>Applications</div>
-      <mat-list-item *ngFor="let app of applications">
-        <div mat-line>{{app.app_name}}</div>
-      </mat-list-item>
+        <mat-list-item (click)="sidenav.close()" [routerLink]="folder?.route" *ngFor="let folder of folders">
+          <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
+          <div mat-line>{{folder.name}}</div>
+          <!-- <div mat-line> {{folder.description | date}} </div> -->
+        </mat-list-item>
+        <div *ngIf="applications ; else loading" mat-subheader>Applications</div>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item (click)="sidenav.close()"  routerLink="/application">
+
+          <div routerLink="/sign-in" mat-line>Application</div>
+
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
 
 
-      <mat-divider></mat-divider>
 
-      <mat-list-item (click)="authService.SignOut()">
+        <mat-list-item (click)="sidenav.close()"   *ngFor="let app of applications">
+          <div mat-line>{{app.app_name}}</div>
+        </mat-list-item>
 
-        <div mat-line>Sign Out</div>
 
-      </mat-list-item>
+
+        <mat-list-item  (click)="sidenav.close()"  (click)="authService.SignOut()">
+
+          <div mat-line>Sign Out</div>
+
+        </mat-list-item>
+
+      </ng-container>
+
+      <ng-template #menuNotLoggedIn>
+        <!-- If Logged Out -->
+
+        <mat-divider></mat-divider>
+
+
+        <mat-list-item (click)="sidenav.close()"  (click)="authService.SignOut()">
+
+          <div routerLink="/sign-in" mat-line>Sign In</div>
+
+        </mat-list-item>
+
+
+      </ng-template>
+
 
     </mat-nav-list>
 
@@ -65,7 +107,7 @@
 
   <div class="example-sidenav-content">
 
-    <div class="center" fxFlex="60%" fxFlex.lt-md="800" fxFlex.lt-lg="80%"  fxFlexAlign="center ">
+    <div class="center" fxFlex="60%" fxFlex.lt-md="800" fxFlex.lt-lg="80%" fxFlexAlign="center ">
       <router-outlet></router-outlet>
 
     </div>

@@ -25,21 +25,27 @@ export class AuthService {
         /* Saving user data in localstorage when 
         logged in and setting up null when logged out */
         this.afAuth.authState.subscribe(user => {
-            this.userDataSubject.next(user)
 
-            user.getIdToken(true).then(d => {
-                console.log('token', d)
-            })
+            console.log('logged in user', user)
+
+
+            this.userDataSubject.next(user)
 
 
             if (user) {
                 this.userData = user;
                 localStorage.setItem('user', JSON.stringify(this.userData));
                 JSON.parse(localStorage.getItem('user'));
+            this.router.navigate(['dashboard']);
+
             } else {
                 localStorage.setItem('user', null);
                 JSON.parse(localStorage.getItem('user'));
+                return this.router.navigate(['sign-in']);
+
             }
+
+
         })
     }
 

@@ -43,6 +43,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { HighlightModule } from 'ngx-highlightjs';
 import { ServiceDetailsComponent } from './service-details/service-details.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SafePipe } from './safe.pipe';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { HttpClientModule } from '@angular/common/http';
     CreateServiceDialogComponent,
     CreateAppDialogComponent,
     ServiceDetailsDialogComponent,
-    ServiceDetailsComponent
+    ServiceDetailsComponent,
+    SafePipe
   ],
   imports: [
     HttpClientModule,

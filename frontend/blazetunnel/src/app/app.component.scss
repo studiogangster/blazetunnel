@@ -10,3 +10,16 @@
 .loader{
     margin: 1rem;
 }
+
+
+.example-header-image {
+
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+
+  .name{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 350;
+  }

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseServiceService } from './firebase-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from './shared/services/auth.service';
 import { filter } from 'rxjs/operators';
+import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
 
 export interface Section {
   name: string;
@@ -22,28 +23,20 @@ export class AppComponent implements OnInit {
   showFiller = false;
   applications = undefined;
 
+  @ViewChild('sidenav' ) sidenav : MatDrawer;
+
   folders: Section[] = [
 
-    {
-      name: 'Applications',
-      description: new Date('1/17/16'),
-      route: ['/application'],
 
-    },
 
     {
       name: 'Profile',
       description: new Date('1/1/16'),
       route: ['/dashboard'],
-    },
+    }
 
 
-    {
-      name: 'Sign In',
-      description: new Date('1/17/16'),
-      route: ['/sign-in'],
 
-    },
 
 
 
@@ -68,10 +61,12 @@ export class AppComponent implements OnInit {
 
 
   constructor(
-    private fbService: FirebaseServiceService, public authService: AuthService,
+    private fbService: FirebaseServiceService,
+    public authService: AuthService,
 
     public dialog: MatDialog
   ) {
+
 
     this.fbService.getApps().then()
 
