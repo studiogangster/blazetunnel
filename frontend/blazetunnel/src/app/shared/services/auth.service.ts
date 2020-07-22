@@ -36,7 +36,7 @@ export class AuthService {
                 this.userData = user;
                 localStorage.setItem('user', JSON.stringify(this.userData));
                 JSON.parse(localStorage.getItem('user'));
-            this.router.navigate(['dashboard']);
+            this.router.navigate(['application']);
 
             } else {
                 localStorage.setItem('user', null);

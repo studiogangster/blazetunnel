@@ -12,13 +12,13 @@
 
   </mat-toolbar>
 
-  <mat-drawer  #sidenav [opened]="false" #drawer class="example-sidenav" mode="push">
+  <mat-drawer #sidenav [opened]="false" #drawer class="example-sidenav" mode="push">
 
 
     <mat-toolbar color="accent">
 
 
-      <mat-toolbar-row *ngIf="authService.userData as user ; else loading">
+      <mat-toolbar-row *ngIf="authService.userDataSubject | async   as user ; else loading">
 
         <div [ngStyle]="{'background-image': 'url(' + user.photoURL  + ')'   } " mat-card-avatar
           class="example-header-image"></div>
@@ -30,6 +30,22 @@
         </span>
 
       </mat-toolbar-row>
+
+
+      <ng-template #loading>
+
+
+        <mat-toolbar-row *ngIf=" loading">
+
+
+          <span class="name">
+            BlazeTunnel
+
+
+          </span>
+
+        </mat-toolbar-row>
+      </ng-template>
 
 
     </mat-toolbar>
@@ -61,7 +77,7 @@
 
         <mat-divider></mat-divider>
 
-        <mat-list-item (click)="sidenav.close()"  routerLink="/application">
+        <mat-list-item (click)="sidenav.close()" routerLink="/application">
 
           <div routerLink="/sign-in" mat-line>Application</div>
 
@@ -71,13 +87,13 @@
 
 
 
-        <mat-list-item (click)="sidenav.close()"   *ngFor="let app of applications">
+        <mat-list-item (click)="sidenav.close()" *ngFor="let app of applications">
           <div mat-line>{{app.app_name}}</div>
         </mat-list-item>
 
 
 
-        <mat-list-item  (click)="sidenav.close()"  (click)="authService.SignOut()">
+        <mat-list-item (click)="sidenav.close()" (click)="authService.SignOut()">
 
           <div mat-line>Sign Out</div>
 
@@ -91,7 +107,7 @@
         <mat-divider></mat-divider>
 
 
-        <mat-list-item (click)="sidenav.close()"  (click)="authService.SignOut()">
+        <mat-list-item (click)="sidenav.close()" (click)="authService.SignOut()">
 
           <div routerLink="/sign-in" mat-line>Sign In</div>
 
