@@ -1,54 +1,73 @@
+<div>
+    <mat-form-field fxFlex class="example-form-field">
+        <input disabled matInput type="text" [(ngModel)]="token">
+        <button (click)="copyMessage(token)" mat-button matSuffix mat-icon-button aria-label="Clear">
+            <mat-icon>content_copy</mat-icon>
+
+        </button>
+    </mat-form-field>
+
+</div>
+
+
+<mat-tab-group *ngIf="token ; else loading" animationDuration="0ms">
 
 
 
-<mat-tab-group *ngIf="token ; else loading"  animationDuration="0ms">
-
-    <mat-tab label="Docker Compose">
-
-
-
+    <mat-tab label="Docker">
         <pre>
-            <code [highlight]="docker_code[0] + token+ docker_code[1]"></code>
-          </pre>
-    </mat-tab>
+            <code  [innerHTML]="code"></code>
+        </pre>
 
-
-    <mat-tab label="Auth Token">
-
-        <mat-form-field fxFlex class="example-form-field">
-            <input disabled matInput type="text" [(ngModel)]="token">
-            <button mat-button matSuffix mat-icon-button aria-label="Clear">
-                <mat-icon>content_copy</mat-icon>
-
-            </button>
-        </mat-form-field>
-    </mat-tab>
-
-
-    <mat-tab label="Mac OSX">
-        <pre>
-            <code [highlight]="code"></code>
-          </pre>
+        <a mat-raised-button (click)="copyMessage(code)">Copy</a>
     </mat-tab>
 
     <mat-tab label="Linux">
         <pre>
-            <code [highlight]="code"></code>
-          </pre>
+            <code [innerHTML]="binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token "></code>
+        </pre>
+        <a class="link" target="_blank" href="/download/linux/x64/blazetunnel" mat-raised-button color="primary">x64</a>
+        <a class="link" target="_blank" href="/download/linux/x86/blazetunnel" mat-raised-button color="accent">x86</a>
+        <a mat-raised-button
+            (click)="copyMessage(  binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token   )">Copy</a>
+
     </mat-tab>
 
-    <mat-tab label="Docker">
-        <pre>
-            <code [highlight]="code"></code>
-          </pre>
-    </mat-tab>
+
 
     <mat-tab label="Windows">
         <pre>
-            <code [highlight]="code"></code>
-          </pre>
+            <code [innerHTML]="binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] "></code>
+        </pre>
+        <a class="link" target="_blank" href="/download/windows/x64/blazetunnel,exe" mat-raised-button
+            color="primary">x64</a>
+        <a class="link" target="_blank" href="/download/windows/x86/blazetunnel.exe" mat-raised-button
+            color="accent">x86</a>
+
+        <a mat-raised-button
+            (click)="copyMessage(  binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token   )">Copy</a>
+
+
     </mat-tab>
 
+
+    <mat-tab label="Mac OSX">
+
+
+
+
+        <pre>
+            <code [innerHTML]="binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] "></code>
+        </pre>
+
+        <a class="link" target="_blank" href="/download/mac/x64/blazetunnel" mat-raised-button color="primary">x64</a>
+        <a class="link" target="_blank" href="/download/mac/x86/blazetunnel" mat-raised-button color="accent">x86</a>
+        <a mat-raised-button
+            (click)="copyMessage(  binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token   )">Copy</a>
+
+
+
+    </mat-tab>
 
 
 </mat-tab-group>
@@ -57,9 +76,9 @@
 <ng-template #loading>
 
     <div class="loader" fxLayout="column" fxLayoutAlign="center center">
-      <mat-spinner diameter="50" size="small"></mat-spinner>
+        <mat-spinner diameter="50" size="small"></mat-spinner>
     </div>
-  
-  
-  
-  </ng-template>
+
+
+
+</ng-template>

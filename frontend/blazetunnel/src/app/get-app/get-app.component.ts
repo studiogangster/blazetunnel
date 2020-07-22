@@ -45,10 +45,10 @@ export class GetAppComponent implements OnInit {
   }
 
 
-  openServiceDetailDialog(app_id: string, service_id: string) {
+  openServiceDetailDialog(app_id: string, service_id: string, app_name: string, service_name: string) {
     const dialogRef = this.dialog.open(ServiceDetailsDialogComponent, {
       width: 'auto',
-      data: { app: app, app_id: app_id, service_id: service_id }
+      data: { app: app, app_id: app_id, service_id: service_id, app_name: app_name, service_name: service_name }
     });
 
     dialogRef.afterClosed().subscribe(result => {

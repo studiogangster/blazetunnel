@@ -40,11 +40,12 @@ import {MatDividerModule} from '@angular/material/divider';
 import { CreateAppDialogComponent } from './dialogs/create-app-dialog/create-app-dialog.component';
 import { ServiceDetailsDialogComponent } from './dialogs/service-details-dialog/service-details-dialog.component';
 import {MatTabsModule} from '@angular/material/tabs';
-import { HighlightModule } from 'ngx-highlightjs';
+// import { HighlightModule } from 'ngx-highlightjs';
 import { ServiceDetailsComponent } from './service-details/service-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SafePipe } from './safe.pipe';
 import { SpecialCharacterDirective } from './special-character.directive';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -64,8 +65,9 @@ import { SpecialCharacterDirective } from './special-character.directive';
     SpecialCharacterDirective
   ],
   imports: [
+    MatSnackBarModule,
     HttpClientModule,
-    HighlightModule,
+    // HighlightModule,
     MatTabsModule,
     MatDividerModule,
     MatDialogModule,
