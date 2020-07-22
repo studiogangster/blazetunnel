@@ -1,10 +1,8 @@
 package common
 
 import (
-	"errors"
 	"io"
 	"log"
-	"strings"
 
 	"github.com/hako/branca"
 	"github.com/vmihailenco/msgpack"
@@ -71,41 +69,44 @@ func (m *Message) Authenticate() error {
 		return err
 	}
 
-	credentials := strings.Split(message, ":")
-
-	service := ""
-
-	if len(credentials) == 3 {
-
-		service = credentials[2] + "-" + credentials[0]
-		return nil
-
-		// authenticated := (&db.App{
-		// 	Appname:  credentials[0],
-		// 	Password: credentials[1],
-		// }).Authenticate()
-
-		// if authenticated {
-
-		// if credentials[2] == "" {
-		// service = credentials[0]
-		// } else {
-		// service = credentials[2] + "-" + credentials[0]
-		// }
-
-		// } else {
-		// service = ""
-		// return errors.New("Invalid Credentials")
-
-		// }
-
-	} else {
-		service = ""
-		return errors.New("Invalid Credentials")
-	}
-
-	m.Context = service
+	m.Context = message
 	return nil
+
+	// credentials := strings.Split(message, ":")
+
+	// service := ""
+
+	// if len(credentials) == 3 {
+
+	// service = credentials[2] + "-" + credentials[0]
+	// return nil
+
+	// authenticated := (&db.App{
+	// 	Appname:  credentials[0],
+	// 	Password: credentials[1],
+	// }).Authenticate()
+
+	// if authenticated {
+
+	// if credentials[2] == "" {
+	// service = credentials[0]
+	// } else {
+	// service = credentials[2] + "-" + credentials[0]
+	// }
+
+	// } else {
+	// service = ""
+	// return errors.New("Invalid Credentials")
+
+	// }
+
+	// } else {
+	// 	service = ""
+	// 	return errors.New("Invalid Credentials")
+	// }
+
+	// m.Context = service
+	// return nil
 }
 
 // DecodeFrom is used to decode the message into the message struct
