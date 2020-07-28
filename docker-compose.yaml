@@ -195,4 +195,12 @@ services:
         image: meddler/blazetunnel:0.0.1
         container_name: dockerblaze
         command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}" --local mockserver:8000 -i 3600
+        
+
+
+
+    blazetunnel_sidecar:
+        image: meddler/blazetunnel:0.0.1
+        container_name: blazetunnel_sidecar
+        command: client --token TYt7fqqcySqwPGxEQq5gJ5YeUQfaStAfZ0aAVTd7J8BJOrFjVsBKlJBDG4K3N7xrSnUGdiivgT --local localhost:9090
 

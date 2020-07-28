@@ -16,10 +16,10 @@
 
     <mat-tab class="tab" label="Docker Compose">
         <pre>
-            <code  [innerHTML]="docker_code[0] + token"></code>
+            <code  [innerHTML]="docker_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +   token"></code>
         </pre>
         <div>
-            <button mat-raised-button (click)="copyMessage( docker_code[0] + token  )">Copy</button>
+            <button mat-raised-button (click)="copyMessage( docker_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token  )">Copy</button>
 
         </div>
     </mat-tab>
