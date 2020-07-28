@@ -19,7 +19,7 @@
             <code  [innerHTML]="docker_code[0] + token"></code>
         </pre>
         <div>
-            <button mat-raised-button (click)="copyMessage(code)">Copy</button>
+            <button mat-raised-button (click)="copyMessage( docker_code[0] + token  )">Copy</button>
 
         </div>
     </mat-tab>
