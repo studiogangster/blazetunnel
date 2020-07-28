@@ -189,3 +189,10 @@ services:
             - "443:443"
             - "80:80"
         command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+
+    dockerblaze:
+        image: meddler/blazetunnel:0.0.1
+        container_name: dockerblaze
+        command: client --tunnel "${SERVICE_NAME}.${DOMAIN_NAME}" --local mockserver:8000 -i 3600
+

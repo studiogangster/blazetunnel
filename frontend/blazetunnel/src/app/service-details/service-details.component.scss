@@ -6,3 +6,12 @@
     margin: 1rem;
     margin-left: auto;
 }
+
+:host  ::ng-deep .mat-tab-body-content{
+
+    overflow: hidden;
+}
+
+pre{
+    overflow: auto;
+}

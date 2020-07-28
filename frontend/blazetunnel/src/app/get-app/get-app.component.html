@@ -120,12 +120,12 @@
                             <button fxFlex
                                 (click)="openServiceDetailDialog(  app.id , data.id , app.app_name , data.service_name ) ; $event.stopPropagation();"
                                 mat-button>
-                                {{app?.app_name}}-{{data?.service_name}}.blazetunnel.meddler.xyz
+                                {{data?.service_name}}-{{app?.app_name}}.blazetunnel.meddler.xyz
                             </button>
 
 
                             <a target="_blank"
-                                [routerLink]="'//' +   app?.app_name + '-' + data?.service_name + '.blazetunnel.meddler.xyz'"
+                                [routerLink]="'//' + data?.service_name +   app?.app_name + '-' + '.blazetunnel.meddler.xyz'"
                                 mat-icon-button>
                                 <mat-icon>north_east</mat-icon>
                         </a>

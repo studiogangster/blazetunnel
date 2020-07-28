@@ -14,22 +14,31 @@
 
 
 
-    <mat-tab label="Docker">
+    <mat-tab class="tab" label="Docker Compose">
         <pre>
-            <code  [innerHTML]="code"></code>
+            <code  [innerHTML]="docker_code[0] + token"></code>
         </pre>
+        <div>
+            <button mat-raised-button (click)="copyMessage(code)">Copy</button>
 
-        <a mat-raised-button (click)="copyMessage(code)">Copy</a>
+        </div>
     </mat-tab>
 
-    <mat-tab label="Linux">
+    <mat-tab class="tab" label="Linux">
         <pre>
             <code [innerHTML]="binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token "></code>
         </pre>
-        <a class="link" target="_blank" href="/download/linux/x64/blazetunnel" mat-raised-button color="primary">x64</a>
-        <a class="link" target="_blank" href="/download/linux/x86/blazetunnel" mat-raised-button color="accent">x86</a>
-        <a mat-raised-button
-            (click)="copyMessage(  binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token   )">Copy</a>
+
+        <div>
+            <a class="link" target="_blank" href="/download/linux/x64/blazetunnel" mat-raised-button
+                color="primary">x64</a>
+            <a class="link" primary="_blank" href="/download/linux/x86/blazetunnel" mat-raised-button
+                color="accent">x86</a>
+            <a mat-raised-button
+                (click)="copyMessage(  binary_code[0]  + app_name +  binary_code[1]  +  service_name + binary_code[2] + binary_code[3] +  token   )">Copy</a>
+
+
+        </div>
 
     </mat-tab>
 

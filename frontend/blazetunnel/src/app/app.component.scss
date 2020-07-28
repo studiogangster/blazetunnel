@@ -16,10 +16,19 @@
 
     background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
+    // width: 2.5rem;
+    // height: 2.5rem;
   }
 
   .name{
+      margin-left: 0.3rem;
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: 350;
+    font-size: 1.2rem;
+  }
+
+  .padded{
+      margin-top: 1.2rem;
+      margin-bottom: 1.2rem;
   }

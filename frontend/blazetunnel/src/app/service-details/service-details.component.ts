@@ -23,26 +23,20 @@ export class ServiceDetailsComponent implements OnInit {
   docker_code = [
 
     `
-    version: '3'
-    services:
+      version: "3"
+      services:
+          image: meddler/blazetunnel:0.0.1
+          container_name: dockerblaze
+          command: client --tunnel `
+    ,
+    ` --local mockserver:8000 -i 3600`
 
-      blazetunnel_side_car:
-          image: golang
-          environment: 
-              -  token=`, `
-              -  tunnel=blazetunnel.meddler.xyz
-          command: ./blazetunnel client --local {{mockserver:8000}} -i 3600
-          working_dir: /go/src/github.com/rounak316/blazetunnel
-          read_only: true
-          depends_on:
-              - mockserver
-    `
 
   ]
 
   binary_code = [`./blazetunnel client --tunnel `, `-`, `.blazetunnel.meddler.xyz --local localhost:4200 -i 3600`, ' --token ']
 
-  constructor(private fbService: FirebaseServiceService , private _snackBar: MatSnackBar) { }
+  constructor(private fbService: FirebaseServiceService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
 

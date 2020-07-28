@@ -12,21 +12,19 @@
 <mat-drawer-container fxFlexFill>
 
 
-  <mat-drawer #sidenav [opened]="false" #drawer class="example-sidenav" mode="push">
+  <mat-drawer #sidenav [opened]="false" #drawer class="example-sidenav" mode="side">
 
 
     <mat-toolbar color="accent">
 
 
-      <mat-toolbar-row *ngIf="authService.userDataSubject | async   as user ; else loading">
+      <mat-toolbar-row class="padded" *ngIf="authService.userDataSubject | async   as user ; ">
 
         <div [ngStyle]="{'background-image': 'url(' + user.photoURL  + ')'   } " mat-card-avatar
           class="example-header-image"></div>
 
-        <span class="name">
+        <span fxFlex class="name">
           {{(user.displayName) ? user.displayName : 'User'}}
-
-
         </span>
 
       </mat-toolbar-row>
@@ -35,14 +33,20 @@
       <ng-template #loading>
 
 
-        <mat-toolbar-row *ngIf=" loading">
+        <mat-toolbar-row class="padded" *ngIf=" loading">
 
+          <div mat-card-avatar class="example-header-image"></div>
 
-          <span class="name">
+          <span fxFlex class="name">
             BlazeTunnel
 
 
           </span>
+
+          <div class="loader" fxLayout="column" fxLayoutAlign="center center">
+            <mat-spinner diameter="50" size="small"></mat-spinner>
+          </div>
+
 
         </mat-toolbar-row>
       </ng-template>
@@ -58,7 +62,7 @@
 
 
 
-      <ng-container *ngIf="authService.userDataSubject | async  as user ; else  menuNotLoggedIn"    >
+      <ng-container *ngIf="authService.userDataSubject | async  as user ; else  menuNotLoggedIn">
         <!-- If Logged In -->
 
 
@@ -132,9 +136,8 @@
 
 
 
-      <mat-list-item 
-      *ngIf="(authService.userDataSubject | async  ) "
-      (click)="sidenav.close()" (click)="authService.SignOut()">
+      <mat-list-item *ngIf="(authService.userDataSubject | async  ) " (click)="sidenav.close()"
+        (click)="authService.SignOut()">
 
 
         <div mat-line>
