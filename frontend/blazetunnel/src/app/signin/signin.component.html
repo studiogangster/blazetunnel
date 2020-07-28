@@ -1,40 +1,46 @@
 <mat-card>
   <mat-card-header>
-    <h2 mat-subheader>Login</h2>
+    <h2 r>Login</h2>
 
   </mat-card-header>
 
   <mat-card-content mat-subheader>
 
 
-    <div class="example-form" mat-subheader>
-      <div>
-        <mat-form-field class="example-full-width">
-          <mat-label>Username</mat-label>
-          <input #userName matInput>
-        </mat-form-field>
 
-        <mat-form-field class="example-full-width">
-          <mat-label>Password</mat-label>
-          <input #userPassword matInput type="password">
 
-        </mat-form-field>
-      </div>
+    <mat-form-field  fxFlex>
+      <mat-label>Username</mat-label>
+      <input #userName matInput>
+    </mat-form-field>
 
-    </div>
   </mat-card-content>
-  <mat-card-content>
+  <mat-card-content mat-subheader>
 
-    <button mat-raised-button type="button" (click)="authService.SignIn(userName.value, userPassword.value)">
+    <mat-form-field fxFlex>
+      <mat-label>Password</mat-label>
+      <input #userPassword matInput type="password">
+
+    </mat-form-field>
+
+  </mat-card-content>
+  <mat-card-content >
+
+    <button color="accent" fxFlex mat-raised-button (click)="authService.SignIn(userName.value, userPassword.value)">
       Log in
     </button>
 
 
   </mat-card-content>
+  <mat-card-content>
+
+    <mat-divider></mat-divider>
+  </mat-card-content>
+
 
   <mat-card-content>
 
-    <button mat-raised-button type="button" (click)="authService.GoogleAuth()">
+    <button color="primary" fxFlex mat-raised-button (click)="authService.GoogleAuth()">
       Log in with Google
     </button>
 

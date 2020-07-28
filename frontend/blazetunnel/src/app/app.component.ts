@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   showFiller = false;
   applications = undefined;
 
-  @ViewChild('sidenav' ) sidenav : MatDrawer;
+  @ViewChild('sidenav') sidenav: MatDrawer;
 
   folders: Section[] = [
 
@@ -32,7 +32,15 @@ export class AppComponent implements OnInit {
     {
       name: 'Profile',
       description: new Date('1/1/16'),
-      route: ['/dashboard'],
+      route: ['/profile'],
+    }
+    ,
+
+
+    {
+      name: 'Details',
+      description: new Date('1/1/16'),
+      route: ['/faq'],
     }
 
 

@@ -1,52 +1,78 @@
-<!-- <div mat-subheader>Application</div> -->
-
-<mat-accordion  >
+<mat-accordion>
 
 
 
     <ng-container *ngIf="applications ;  else loading">
 
-        <mat-expansion-panel (opened)="opened(app.id)" (opened)="closed(app.id)" *ngFor="let app of applications "
-            hideToggle>
-            <mat-expansion-panel-header>
-                <mat-panel-title fxLayout="column" fxLayoutAlign="center start">
+        <ng-container *ngIf="applications.length == 0 ; else applist">
+
+
+            <mat-card class="card">
+
+
+                <mat-card-content>
+
+                    <div fxFlex fxLayoutAlign="center">
+                        <h3>
+                            No Applications found
+                        </h3>
+                    </div>
+
+                </mat-card-content>
+                <mat-card-actions class="center">
+
+                    <button fxFlex fxLayoutAlign="center" (click)="openAppCreationDialog()" class="create"
+                        color="primary" mat-raised-button>Create
+                        new application</button>
+
+                </mat-card-actions>
+            </mat-card>
+
+        </ng-container>
+
+        <ng-template #applist>
+
+
+            <mat-expansion-panel (opened)="opened(app.id)" (opened)="closed(app.id)" *ngFor="let app of applications "
+                hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title fxLayout="column" fxLayoutAlign="center start">
 
                         {{app.app_name  }}
 
-                </mat-panel-title>
+                    </mat-panel-title>
 
-                <mat-panel-description fxLayout="column" fxLayoutAlign="center end">
+                    <mat-panel-description fxLayout="column" fxLayoutAlign="center end">
 
-                    <div fxLayout="row" fxLayoutAlign="center center">
-                        <mat-slide-toggle (change)="enableApp(app.id , $event.checked)"
-                            [checked]="app?.enabled || false" (click)="$event.stopPropagation();"
-                            labelPosition="before">
-                        </mat-slide-toggle>
+                        <div fxLayout="row" fxLayoutAlign="center center">
+                            <!-- <mat-slide-toggle (change)="enableApp(app.id , $event.checked)"
+                                [checked]="app?.enabled || false" (click)="$event.stopPropagation();"
+                                labelPosition="before">
+                            </mat-slide-toggle> -->
 
-                        <button (click)="$event.stopPropagation();" mat-icon-button [matMenuTriggerFor]="menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-
-
-                        <mat-menu #menu="matMenu">
-                            <button (click)="delete(app.id)" mat-menu-item>Delete</button>
-
-                        </mat-menu>
-                    </div>
+                            <button (click)="$event.stopPropagation();" mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
 
 
-                </mat-panel-description>
+                            <mat-menu #menu="matMenu">
+                                <button (click)="delete(app.id)" mat-menu-item>Delete</button>
 
-            </mat-expansion-panel-header>
+                            </mat-menu>
+                        </div>
 
 
+                    </mat-panel-description>
+
+                </mat-expansion-panel-header>
 
 
 
-            <div fxGap="1rem">
-                <mat-divider class="divider"></mat-divider>
 
-                
+
+
+
+
                 <button (click)="openServiceCreationDialog(app)" class="create" color="accent" mat-raised-button>Create
                     service</button>
 
@@ -54,80 +80,80 @@
                 <ng-container *ngIf=" serviceList$ | async as services  ; else loading ">
 
 
+                    <ng-template #noservice>
+
+
+                        <mat-card-content>
+
+                            <div fxFlex fxLayoutAlign="center">
+                                <h3>
+                                    No Services found
+                                </h3>
+                            </div>
+
+                        </mat-card-content>
+
+                        <mat-card-actions class="center">
+
+                            <button fxFlex fxLayoutAlign="center" (click)="openServiceCreationDialog(app)"
+                                class="create" color="primary" mat-raised-button>Create
+                                new service</button>
+
+                        </mat-card-actions>
+
+                    </ng-template>
+
+
+                    <ng-container *ngIf="services && services.length > 0 ; else noservice">
+
+
+
+                        <div fxLayout="row" mat-subheader>Services</div>
+
+
+
+                        <div fxLayout="row" *ngFor="let data of services ">
+
+
+
+
+                            <button fxFlex
+                                (click)="openServiceDetailDialog(  app.id , data.id , app.app_name , data.service_name ) ; $event.stopPropagation();"
+                                mat-button>
+                                {{app?.app_name}}-{{data?.service_name}}.blazetunnel.meddler.xyz
+                            </button>
+
+
+                            <a target="_blank"
+                                [routerLink]="'//' +   app?.app_name + '-' + data?.service_name + '.blazetunnel.meddler.xyz'"
+                                mat-icon-button>
+                                <mat-icon>north_east</mat-icon>
+                        </a>
+
+
+
+                            <button (click)="$event.stopPropagation();" mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+
+                            <mat-menu #menu="matMenu">
+                                <button (click)="deleteService( app.id, data.id  )" mat-menu-item>Delete</button>
+
+                                <button (click)="deleteService( app.id, data.id  )" mat-menu-item>Export</button>
+
+                            </mat-menu>
 
 
 
 
 
 
-                    <ng-container *ngIf="services && services.length > 0">
 
-
-                        <mat-divider class="divider"></mat-divider>
-
-
-                        <div mat-subheader>Services</div>
-
-                        <mat-list class="list">
-
-                            <ng-container>
+                        </div>
 
 
 
 
-                                <mat-list-item class=" item" *ngFor="let data of services ">
-
-                                    <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
-                                    <!-- <div mat-line>
-                                        <button fxFlex fxFill class="textbtn"
-                                            (click)="openServiceDetailDialog(  app.id , data.id ) ; $event.stopPropagation();"
-                                            mat-button>
-                                            {{data?.service_name}}
-                                        </button>
-                                    </div> -->
-                                    <div mat-line>
-                                        <a 
-                                        (click)="openServiceDetailDialog(  app.id , data.id , app.app_name , data.service_name ) ; $event.stopPropagation();"
-                                        
-                                        fxFlex fxFill class="textbtn"
-
-
-                                            mat-button>
-                                            {{app?.app_name}}-{{data?.service_name}}.blazetunnel.meddler.xyz
-                                    </a>
-                                    </div>
-
-                                    <a
-                                    target="_blank" [href]="'//' +   app?.app_name + '-' + data?.service_name + '.blazetunnel.meddler.xyz'" 
-                                        mat-button>
-                                        <mat-icon>north_east</mat-icon>
-                                </a>
-
-                                    <mat-slide-toggle [disabled]="! ( app?.enabled || false)"
-                                        [checked]="data?.enabled || false"
-                                        (change)="enableService(app.id, data.id , $event.checked)" class="right"
-                                        labelPosition="before">
-                                    </mat-slide-toggle>
-
-                                    <button (click)="$event.stopPropagation();" mat-button
-                                        [matMenuTriggerFor]="menu">
-                                        <mat-icon>more_vert</mat-icon>
-                                    </button>
-
-
-                                    <mat-menu #menu="matMenu">
-                                        <button (click)="deleteService( app.id, data.id  )"
-                                            mat-menu-item>Delete</button>
-
-                                        <button (click)="deleteService( app.id, data.id  )"
-                                            mat-menu-item>Export</button>
-
-                                    </mat-menu>
-
-                                </mat-list-item>
-
-                            </ng-container>
-                        </mat-list>
 
 
 
@@ -140,8 +166,12 @@
 
 
 
-            </div>
-        </mat-expansion-panel>
+
+
+
+            </mat-expansion-panel>
+        </ng-template>
+
     </ng-container>
 </mat-accordion>
 

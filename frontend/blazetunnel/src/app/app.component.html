@@ -1,16 +1,16 @@
+<mat-toolbar>
+
+  <mat-toolbar-row>
+    <button type="button" mat-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Blazetunnel</span>
+  </mat-toolbar-row>
+
+
+</mat-toolbar>
 <mat-drawer-container fxFlexFill>
 
-
-  <mat-toolbar>
-    <mat-toolbar-row>
-      <button type="button" mat-button (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>Blazetunnel</span>
-    </mat-toolbar-row>
-
-
-  </mat-toolbar>
 
   <mat-drawer #sidenav [opened]="false" #drawer class="example-sidenav" mode="push">
 
@@ -58,48 +58,92 @@
 
 
 
-      <ng-container *ngIf="authService.userDataSubject | async  as user ; else  menuNotLoggedIn">
+      <ng-container *ngIf="authService.userDataSubject | async  as user ; else  menuNotLoggedIn"    >
         <!-- If Logged In -->
 
-        <div mat-subheader>Dashboard</div>
 
-        <mat-divider></mat-divider>
 
+
+
+
+
+
+
+
+        <mat-list-item (click)="sidenav.close()" routerLink="/application">
+
+          <div routerLink="/sign-in" mat-line>
+            <b>Application</b></div>
+
+        </mat-list-item>
 
 
 
         <mat-list-item (click)="sidenav.close()" [routerLink]="folder?.route" *ngFor="let folder of folders">
           <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
-          <div mat-line>{{folder.name}}</div>
+          <div mat-line>
+            <b>
+              {{folder.name}}
+            </b>
+          </div>
           <!-- <div mat-line> {{folder.description | date}} </div> -->
         </mat-list-item>
-        <div *ngIf="applications ; else loading" mat-subheader>Applications</div>
-
-        <mat-divider></mat-divider>
-
-        <mat-list-item (click)="sidenav.close()" routerLink="/application">
-
-          <div routerLink="/sign-in" mat-line>Application</div>
-
-        </mat-list-item>
-
-        <mat-divider></mat-divider>
 
 
 
-        <mat-list-item (click)="sidenav.close()" *ngFor="let app of applications">
+
+
+        <!-- <mat-list-item (click)="sidenav.close()" *ngFor="let app of applications">
           <div mat-line>{{app.app_name}}</div>
-        </mat-list-item>
+        </mat-list-item> -->
 
 
 
-        <mat-list-item (click)="sidenav.close()" (click)="authService.SignOut()">
 
-          <div mat-line>Sign Out</div>
-
-        </mat-list-item>
 
       </ng-container>
+
+      <mat-divider></mat-divider>
+
+
+      <a target="_blank" mat-list-item (click)="sidenav.close()" href="//meddler.xyz/news/">
+
+        <div mat-line><b>News</b></div>
+
+      </a>
+
+      <a target="_blank" mat-list-item (click)="sidenav.close()" href="//meddler.xyz/products/">
+
+        <div mat-line><b>Products</b></div>
+
+      </a>
+
+      <a target="_blank" mat-list-item (click)="sidenav.close()" href="//meddler.xyz/connect/">
+
+        <div mat-line><b>Contact Us</b></div>
+
+      </a>
+
+      <a target="_blank" mat-list-item (click)="sidenav.close()" href="//meddler.xyz">
+
+        <div mat-line><b>@meddler.xyz </b></div>
+
+      </a>
+
+
+
+      <mat-list-item 
+      *ngIf="(authService.userDataSubject | async  ) "
+      (click)="sidenav.close()" (click)="authService.SignOut()">
+
+
+        <div mat-line>
+          <b>
+            Sign Out
+          </b>
+        </div>
+
+      </mat-list-item>
 
       <ng-template #menuNotLoggedIn>
         <!-- If Logged Out -->
@@ -109,7 +153,7 @@
 
         <mat-list-item (click)="sidenav.close()" (click)="authService.SignOut()">
 
-          <div routerLink="/sign-in" mat-line>Sign In</div>
+          <div routerLink="/sign-in" mat-line><b>Sign In</b></div>
 
         </mat-list-item>
 

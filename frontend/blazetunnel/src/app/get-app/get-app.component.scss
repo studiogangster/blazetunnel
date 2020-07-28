@@ -23,18 +23,13 @@
     width: 100%;
 }
 
-.list{
 
-    margin-left: 1rem;
-    margin-right: 1rem;
-
-}
 
 .divider{
     margin: 1rem;
 }
 
-mat-list{
+mat-list{ 
     max-height: 300px;
     overflow: auto;
 }
@@ -46,3 +41,15 @@ mat-list{
 .loader{
     margin: 1rem;
 }
+
+.card{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.create{
+    margin-left: auto;
+    display: flex;
+    text-align: center;
+}
+

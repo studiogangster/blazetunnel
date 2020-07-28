@@ -46,6 +46,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SafePipe } from './safe.pipe';
 import { SpecialCharacterDirective } from './special-character.directive';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     ServiceDetailsDialogComponent,
     ServiceDetailsComponent,
     SafePipe,
-    SpecialCharacterDirective
+    SpecialCharacterDirective,
+    FaqComponent
   ],
   imports: [
     MatSnackBarModule,

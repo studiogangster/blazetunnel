@@ -10,6 +10,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateServiceDialogComponent } from '../dialogs/create-service-dialog/create-service-dialog.component';
 import { ServiceDetailsDialogComponent } from '../dialogs/service-details-dialog/service-details-dialog.component';
+import { CreateAppDialogComponent } from '../dialogs/create-app-dialog/create-app-dialog.component';
 
 @Component({
   selector: 'app-get',
@@ -27,6 +28,22 @@ export class GetAppComponent implements OnInit {
 
     public dialog: MatDialog
   ) { }
+
+
+  openAppCreationDialog(): void {
+    const dialogRef = this.dialog.open(CreateAppDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+
+      if (result) {
+          this.refreshApplications()
+      }
+
+    });
+  }
 
   openServiceCreationDialog(app): void {
     const dialogRef = this.dialog.open(CreateServiceDialogComponent, {

@@ -8,18 +8,20 @@ import { VerifyemailComponent } from 'src/app/verifyemail/verifyemail.component'
 import { DashboardComponent } from 'src/app/dashboard/dashboard.component';
 import { AuthGuard } from '../guard/auth.guard';
 import { AppCreateComponent } from 'src/app/app-create/app-create.component';
+import { FaqComponent } from 'src/app/faq/faq.component';
 
 
 // Import all the components for which navigation service has to be activated 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+  { path: '', redirectTo: '/application', pathMatch: 'full'},
   { path: 'application', component: AppCreateComponent},
+  { path: 'faq', component: FaqComponent},
   { path: 'sign-in', component: SigninComponent},
 
   
   { path: 'register-user', component: SignupComponent},
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'forgot-password', component: ForgotpasswordComponent },
   { path: 'verify-email-address', component: VerifyemailComponent }
 ];

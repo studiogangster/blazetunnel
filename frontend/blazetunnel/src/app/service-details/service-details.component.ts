@@ -40,7 +40,7 @@ export class ServiceDetailsComponent implements OnInit {
 
   ]
 
-  binary_code = [`./blazetunnel client --tunnel `, `-`, `.blazetunnel.meddler.xyz --local mockserver:8000 -i 3600`, ' --token ']
+  binary_code = [`./blazetunnel client --tunnel `, `-`, `.blazetunnel.meddler.xyz --local localhost:4200 -i 3600`, ' --token ']
 
   constructor(private fbService: FirebaseServiceService , private _snackBar: MatSnackBar) { }
 

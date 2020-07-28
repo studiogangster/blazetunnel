@@ -3,7 +3,7 @@ import { User } from "../services/user";
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -20,7 +20,8 @@ export class AuthService {
         public afs: AngularFirestore,   // Inject Firestore service
         public afAuth: AngularFireAuth, // Inject Firebase auth service
         public router: Router,
-        public ngZone: NgZone // NgZone service to remove outside scope warning
+        public ngZone: NgZone,// NgZone service to remove outside scope warning
+        private activatedRoute: ActivatedRoute
     ) {
         /* Saving user data in localstorage when 
         logged in and setting up null when logged out */
@@ -36,7 +37,9 @@ export class AuthService {
                 this.userData = user;
                 localStorage.setItem('user', JSON.stringify(this.userData));
                 JSON.parse(localStorage.getItem('user'));
-            this.router.navigate(['application']);
+
+                this.goToDashboard()
+
 
             } else {
                 localStorage.setItem('user', null);
@@ -49,12 +52,22 @@ export class AuthService {
         })
     }
 
+    goToDashboard() {
+        this.activatedRoute.params.subscribe(params => {
+            console.log('route', params)
+            if (this.router.url == '/sign-in')
+                this.router.navigate(['application'])
+
+        })
+    }
+
     // Sign in with email/password
     SignIn(email, password) {
         return this.afAuth.signInWithEmailAndPassword(email, password)
             .then((result) => {
                 this.ngZone.run(() => {
-                    this.router.navigate(['dashboard']);
+                    // this.router.navigate(['dashboard']);
+                    this.goToDashboard()
                 });
                 this.SetUserData(result.user);
             }).catch((error) => {
@@ -119,7 +132,9 @@ export class AuthService {
         return this.afAuth.signInWithPopup(provider)
             .then((result) => {
                 this.ngZone.run(() => {
-                    this.router.navigate(['dashboard']);
+                    // this.router.navigate(['dashboard']);
+                    this.goToDashboard()
+
                 })
                 this.SetUserData(result.user);
             }).catch((error) => {

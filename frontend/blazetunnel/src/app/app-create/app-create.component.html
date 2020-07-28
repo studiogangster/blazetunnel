@@ -1,15 +1,19 @@
+<div mat-subheader>
 
-
-<div mat-subheader >
-    <h3>
+    <h2 mat-line fxFlex>
         Applications
-    </h3>
-    <button (click)="openServiceCreationDialog()" class="create" color="primary" mat-raised-button>Create application</button>
+    </h2>
+
+
+    <button (click)="openServiceCreationDialog()" class="create" color="primary" mat-raised-button>Create
+        application</button>
 </div>
 
+
+<mat-divider class="divider"></mat-divider>
 <div>
     <div fxLayout="column">
-        <app-get #applicationList ></app-get>
+        <app-get #applicationList></app-get>
 
     </div>
 </div>
