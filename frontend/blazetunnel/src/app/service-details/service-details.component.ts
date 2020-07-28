@@ -25,9 +25,10 @@ export class ServiceDetailsComponent implements OnInit {
     `
       version: "3"
       services:
-          image: meddler/blazetunnel:0.0.1
-          container_name: dockerblaze
-          command: client --tunnel `
+          blazetunnel:
+              image: meddler/blazetunnel:0.0.1
+              container_name: blazetunnel_sidecar
+              command: client --tunnel `
     ,
     ` --local mockserver:8000 -i 3600`
 
