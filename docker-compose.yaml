@@ -157,7 +157,7 @@ services:
     mockserver:
         image: opensecurity/mobile-security-framework-mobsf
         ports: 
-            - 8081:8000
+            - 4200:8000
 
     # blazeserver:
     #     build: https://github.com/rounak316/blazetunnel.git

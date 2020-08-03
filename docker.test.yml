@@ -1,8 +1,11 @@
-
 version: "3"
 services:
+    mobsf:
+        image: opensecurity/mobile-security-framework-mobsf
+        ports: 
+            - 8000:8000
+
     blazetunnel:
         image: meddler/blazetunnel:0.0.1
-        container_name: blazetunnel_sidecar_1
-        command: client --tunnel example-ng.blazetunnel.meddler.xyz --local localhost:4200 -i 3600 --token TYt7gECh6oTPbLyHPCZjtAHIegLSLMlWwbxvzmcUtQwjs483yA8sU4S7ORlBZdc158Z2v2oCaQ
-        
+        container_name: blazetunnel_sidecar_test
+        command: client --tunnel example-mobsf.blazetunnel.meddler.xyz --local mobsf:8000 -i 3600 --token XZ585UjSwdbaPZ89Bt38hOxPAjBXs2b7b7pdnjLgN4KEDxXlrIl664b0rt94yzj7nGGAvPqEpGeXZw
