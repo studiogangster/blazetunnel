@@ -1,4 +1,5 @@
 # blazetunnel
+![Blazetunnel cringy logo](https://res.cloudinary.com/meddler/image/upload/q_auto:low/v1/meddler-images/2020/07/Screenshot-2020-07-28-at-4.29.57-PM.png)
 
 Blazetunnel creates a secured tunnel(s) between your local machine(s) & a dedicated server.
 This tunnel can be used expose your local service to the public on the internet.
