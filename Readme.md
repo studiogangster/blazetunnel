@@ -129,5 +129,5 @@ docker-compose up server
 docker-compose up client
 ```
 
-#### Go to https://{service_name}.{domain_name} to access local server! Ex: https://quic.meddler.xyz
+#### Go to https://{service_name}.{domain_name} to access local server! Ex: https://blazetunnel.meddler.xyz
 
