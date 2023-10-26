@@ -53,33 +53,43 @@ So, it can bypass TCP firewall restrictions, is fast, scalable, supports multipl
 ### Architechture
 
 ```
-                            Blazetunnel architecture
- _______                       _________________            ________
-|       | Behind NAT          |     Exposed     |          |        |
-|       |                     |                 |          |        |        (HTTP/HTTPS)
-| local |    <--- QUIC --->   |     Tunnel      | <--TLS-->|  Nginx |    <--Browser/cURL/openssl-->     
-|       |                     |                 |          |        |
-|_______|                     |_________________|          |________|
-
-
-
-         __________              __________             
-        |          |            |          |    
-        |          |            |          |    
-        |  docker  |            |  dokcer  |   
-        |    I     |            |    II    |        
-        |__________|            |__________|     
-
-        Service I (service)     Service II (quic)
-        Expose: 8080            Port: 80 : service:8080      
-
-         _________ 
-        |         |             REQUEST
-        | CLIENT  |   ----> quic:80 ---> service:8080|
-        |         |   <------------------------------|
-        |         |               RESPONSE
-        |_________|
-
+      ┌─────────┐      Behind NAT      ┌──────────────┐      ┌─────────┐
+      │         │ ──────────────────▶ │ Exposed      │ ───▶│         │
+      │  Local  │       QUIC         │    Tunnel    │ TLS │  Nginx  │
+      │         │ ◀─────────────────  │              │ ◀───│         │
+      └─────────┘                    └──────────────┘     └─────────┘
+                ▲                    ▲
+                │                    │
+                │                    │ HTTP/HTTPS
+                │                    │
+                │                    │
+                │                    ▼
+          ______│__________           ▌
+         |  Docker Container  I      ▌
+         | Expose: 8080             ▌
+         |_________________________ ▌
+         
+          ______│__________          ▌
+         |  Docker Container  II     ▌
+         | Port: 80 : service:8080   ▌
+         |_________________________ ▌
+                │
+                ▼
+          ┌─────────┐
+          │         │
+          │  Client │
+          │         │
+          └─────────┘
+             REQUEST
+             ┌──────
+             │ quic:80
+             │ ┌──────────
+             │ ▼
+        quic:80 ◀───┐ service:8080
+             │ ─────
+             │ ┌──────
+             │ ▼
+             ───────▶ RESPONSE
 
 
 ```
